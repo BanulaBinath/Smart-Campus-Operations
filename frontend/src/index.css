@@ -1,4 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand */
+  --color-primary: #1D4ED8;        
+  --color-primary-hover: #1E40AF;  
+  --color-primary-light: #DBEAFE;  
+  --color-primary-text: #1E3A8A;   
+
+  /* Semantic */
+  --color-success: #16A34A;        
+  --color-success-light: #DCFCE7;  
+  --color-success-text: #14532D;   
+
+  --color-warning: #D97706;        
+  --color-warning-light: #FEF3C7;  
+  --color-warning-text: #78350F;   
+
+  --color-danger: #DC2626;         
+  --color-danger-light: #FEE2E2;   
+  --color-danger-text: #7F1D1D;    
+
+  --color-info: #0891B2;           
+  --color-info-light: #CFFAFE;     
+  --color-info-text: #164E63;      
+
+  /* Neutral surfaces */
+  --color-bg: #F8FAFC;             
+  --color-surface: #FFFFFF;        
+  --color-border: #E2E8F0;         
+  --color-border-focus: #93C5FD;   
+
+  /* Text */
+  --color-text: #0F172A;           
+  --color-text-muted: #64748B;     
+  --color-text-placeholder: #94A3B8; 
+
+  /* Sidebar */
+  --color-sidebar-bg: #0F172A;     
+  --color-sidebar-text: #CBD5E1;   
+  --color-sidebar-active: #1D4ED8; 
+  --color-sidebar-hover: #1E293B;  
+}
 
 * {
   box-sizing: border-box;
@@ -11,6 +57,8 @@ html {
 body {
   margin: 0;
   font-family: 'Manrope', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

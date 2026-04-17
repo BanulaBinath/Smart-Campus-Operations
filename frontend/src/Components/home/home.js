@@ -29,13 +29,23 @@ function Home() {
       <Nav />
 
       <section className="hero" id="home">
+
+        {/* Admin Button (FIXED - visible now) */}
+        <div className="admin-btn-wrapper">
+          <Link to="/admin">
+            <button className="asd">Admin</button>
+          </Link>
+        </div>
+
         <div className="hero-content">
           <p className="hero-tag">Smart Booking. Smooth Campus Life.</p>
           <h1>Welcome to Smart Campus Operations Hub</h1>
+
           <p>
             Manage bookings for lecture halls, conference halls, sports grounds, and facility items
             from one student-friendly platform designed for speed and clarity.
           </p>
+
           <div className="hero-actions">
             <Link to="/login" className="btn btn-primary">Login</Link>
             <Link to="/signup" className="btn btn-secondary">Sign Up</Link>
@@ -58,6 +68,7 @@ function Home() {
           <h2>Facility Highlights</h2>
           <p>Everything you need to run your academic and activity schedule seamlessly.</p>
         </div>
+
         <div className="feature-grid">
           {features.map((feature) => (
             <article className="feature-card" key={feature.title}>
@@ -66,6 +77,7 @@ function Home() {
             </article>
           ))}
         </div>
+
         <div className="cta-wrap">
           <a href="#facilities" className="btn btn-primary">View Facilities</a>
         </div>

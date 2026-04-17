@@ -1,13 +1,16 @@
 import React from 'react'
-import sidebar from './sidebar'
+import Sidebar from './sidebar'
+import { Link } from 'react-router-dom'
+import './adminpage.css'
 
-function adminPage() {
+function AdminPage() {
   return (  
     <div>
-        <sidebar />
+        <Sidebar />
       <h1>Admin Page</h1>
+
     </div>
   )
 }
 
-export default adminPage
+export default AdminPage

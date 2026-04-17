@@ -10,4 +10,6 @@ public class SmartCampusOperationsApplication {
 		SpringApplication.run(SmartCampusOperationsApplication.class, args);
 	}
 
+	
+
 }

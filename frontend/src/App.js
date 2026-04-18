@@ -8,6 +8,10 @@ import CreateTicket from './Components/ticket/CreateTicket';
 import TicketChat from './Components/ticket/TicketChat';
 import TechnicianDashboard from './Components/ticket/TechnicianDashboard';
 import TechnicianTicketDetail from './Components/ticket/TechnicianTicketDetail';
+import AdminDashboard from './Components/ticket/admin/AdminDashboard';
+import AdminTickets from './Components/ticket/admin/AdminTickets';
+import AdminTicketDetail from './Components/ticket/admin/AdminTicketDetail';
+import AdminTechs from './Components/ticket/admin/AdminTechs';
 
 function App() {
   return (
@@ -22,6 +26,11 @@ function App() {
       <Route path="/admin/chat" element={<TicketChat role="ADMIN" />} />
       <Route path="/tickets/technician" element={<TechnicianDashboard />} />
       <Route path="/tickets/technician/detail" element={<TechnicianTicketDetail />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin/tickets" element={<AdminTickets />} />
+      <Route path="/admin/tickets/:id" element={<AdminTicketDetail />} />
+      <Route path="/admin/tickets/:id/assign" element={<AdminTechs />} />
+      <Route path="/admin/techs" element={<AdminTechs />} />
     </Routes>
   );
 }

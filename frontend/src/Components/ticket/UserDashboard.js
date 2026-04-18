@@ -80,7 +80,7 @@ function UserDashboard() {
 
               <div className="ticket-card-actions">
                 <Link to="/tickets/chat" className="ticket-action-link">
-                  View Details
+                  Open Conversation
                 </Link>
               </div>
             </div>

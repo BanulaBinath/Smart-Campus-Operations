@@ -1,0 +1,22 @@
+.user-dashboard-box {
+    background: #ffffff;
+    border: 1px solid #deebff;
+    border-radius: 24px;
+    box-shadow: 0 12px 28px rgba(30, 84, 167, 0.1);
+    padding: 1.8rem;
+    min-height: 420px;
+}
+
+.user-dashboard-box h1 {
+    margin: 0;
+    color: #0c3a89;
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.user-dashboard-box p {
+    margin-top: 0.9rem;
+    color: #456697;
+    line-height: 1.7;
+    max-width: 760px;
+}

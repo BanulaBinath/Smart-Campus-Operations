@@ -12,10 +12,10 @@ import java.util.UUID;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
     List<Notification> findByRecipientIdOrderByCreatedAtDesc(UUID userId);
-    List<Notification> findByRecipientIdAndIsReadFalse(UUID userId);
-    long countByRecipientIdAndIsReadFalse(UUID userId);
+    List<Notification> findByRecipientIdAndReadFalse(UUID userId);
+    long countByRecipientIdAndReadFalse(UUID userId);
 
     @Modifying
-    @Query("UPDATE Notification n SET n.isRead = true WHERE n.recipient.id = :userId")
+    @Query("UPDATE Notification n SET n.read = true WHERE n.recipient.id = :userId")
     void markAllReadByRecipientId(UUID userId);
 }

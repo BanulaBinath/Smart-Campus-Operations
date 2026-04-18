@@ -1,5 +1,7 @@
 package com.example.smart_campus_operations.controller;
 
+import com.example.smart_campus_operations.dto.CreateUserRequest;
+import com.example.smart_campus_operations.dto.UpdateProfileRequest;
 import com.example.smart_campus_operations.dto.UserResponse;
 import com.example.smart_campus_operations.dto.UserRoleUpdateRequest;
 import com.example.smart_campus_operations.service.UserService;
@@ -20,6 +22,12 @@ public class UserManagementController {
 
     private final UserService userService;
 
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
+        return ResponseEntity.ok(userService.createUser(request));
+    }
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -29,6 +37,17 @@ public class UserManagementController {
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser(Authentication authentication) {
         return ResponseEntity.ok(userService.getCurrentUser(authentication));
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<UserResponse> updateProfile(Authentication authentication, @Valid @RequestBody UpdateProfileRequest request) {
+        return ResponseEntity.ok(userService.updateProfile(authentication, request));
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMe(Authentication authentication) {
+        userService.deleteCurrentUser(authentication);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")

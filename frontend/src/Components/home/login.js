@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import api from '../../api/axios';
 import Nav from './nav';
 import Footer from './footer';
 import './login.css';
@@ -7,7 +8,13 @@ import './login.css';
 import { useAuth } from '../../context/AuthContext';
 
 function Login() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, fetchCurrentUser } = useAuth();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   if (loading) {
     return (
@@ -22,6 +29,31 @@ function Login() {
     return <Navigate to="/dashboard" replace />;
   }
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id.split('-')[1]]: e.target.value });
+    setError('');
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSubmitting(true);
+
+    try {
+      await api.post('/auth/login', {
+        email: formData.email,
+        password: formData.password
+      });
+
+      // Fetch the current user to update the global AuthContext state
+      await fetchCurrentUser();
+    } catch (err) {
+      setError(err.response?.data?.message || err.response?.data?.error || 'Login failed. Please check your credentials.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="auth-page">
       <Nav />
@@ -30,14 +62,32 @@ function Login() {
           <h1>Welcome Back</h1>
           <p>Log in to continue managing your campus facility bookings.</p>
 
-          <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+          {error && <div className="mb-4 text-sm font-medium text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">{error}</div>}
+
+          <form className="auth-form" onSubmit={handleLogin}>
             <label htmlFor="login-email">Email</label>
-            <input id="login-email" type="email" placeholder="student@campus.edu" />
+            <input 
+              id="login-email" 
+              type="email" 
+              placeholder="student@campus.edu" 
+              required
+              value={formData.email}
+              onChange={handleChange}
+            />
 
             <label htmlFor="login-password">Password</label>
-            <input id="login-password" type="password" placeholder="Enter your password" />
+            <input 
+              id="login-password" 
+              type="password" 
+              placeholder="Enter your password" 
+              required
+              value={formData.password}
+              onChange={handleChange}
+            />
 
-            <button type="submit" className="auth-btn">Login with Email</button>
+            <button type="submit" className="auth-btn" disabled={submitting}>
+              {submitting ? 'Logging in...' : 'Login with Email'}
+            </button>
             
             <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
               <hr style={{ flex: 1, borderColor: '#c6ddff' }} />

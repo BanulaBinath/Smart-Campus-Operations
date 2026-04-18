@@ -1,5 +1,6 @@
-import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
+import api from '../../api/axios';
 import Nav from './nav';
 import Footer from './footer';
 import './signUp.css';
@@ -8,6 +9,15 @@ import { useAuth } from '../../context/AuthContext';
 
 function SignUp() {
   const { isAuthenticated, loading } = useAuth();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   if (loading) {
     return (
@@ -22,6 +32,33 @@ function SignUp() {
     return <Navigate to="/dashboard" replace />;
   }
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id.split('-')[1]]: e.target.value });
+    setError('');
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setSubmitting(true);
+
+    try {
+      const response = await api.post('/auth/register', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
+
+      setSuccess('Registration successful! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 2000);
+    } catch (err) {
+      setError(err.response?.data?.message || err.response?.data?.error || 'Registration failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="signup-page">
       <Nav />
@@ -30,17 +67,44 @@ function SignUp() {
           <h1>Create Your Account</h1>
           <p>Join Smart Campus Operations and start booking facilities in seconds.</p>
 
-          <form className="signup-form" onSubmit={(e) => e.preventDefault()}>
+          {error && <div className="mb-4 text-sm font-medium text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">{error}</div>}
+          {success && <div className="mb-4 text-sm font-medium text-green-600 bg-green-50 p-3 rounded-lg border border-green-100">{success}</div>}
+
+          <form className="signup-form" onSubmit={handleSignUp}>
             <label htmlFor="signup-name">Full Name</label>
-            <input id="signup-name" type="text" placeholder="Your full name" />
+            <input 
+              id="signup-name" 
+              type="text" 
+              placeholder="Your full name" 
+              required 
+              value={formData.name}
+              onChange={handleChange}
+            />
 
             <label htmlFor="signup-email">Email</label>
-            <input id="signup-email" type="email" placeholder="student@campus.edu" />
+            <input 
+              id="signup-email" 
+              type="email" 
+              placeholder="student@campus.edu" 
+              required 
+              value={formData.email}
+              onChange={handleChange}
+            />
 
             <label htmlFor="signup-password">Password</label>
-            <input id="signup-password" type="password" placeholder="Create a password" />
+            <input 
+              id="signup-password" 
+              type="password" 
+              placeholder="Create a password" 
+              required 
+              minLength="6"
+              value={formData.password}
+              onChange={handleChange}
+            />
 
-            <button type="submit" className="signup-btn">Sign Up with Email</button>
+            <button type="submit" className="signup-btn" disabled={submitting}>
+              {submitting ? 'Creating Account...' : 'Sign Up with Email'}
+            </button>
             
             <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
               <hr style={{ flex: 1, borderColor: '#c6ddff' }} />

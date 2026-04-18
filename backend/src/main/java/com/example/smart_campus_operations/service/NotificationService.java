@@ -47,7 +47,7 @@ public class NotificationService {
     }
 
     public UnreadCountResponse getUnreadCount(UUID userId) {
-        return new UnreadCountResponse(notificationRepository.countByRecipientIdAndIsReadFalse(userId));
+        return new UnreadCountResponse(notificationRepository.countByRecipientIdAndReadFalse(userId));
     }
 
     @Transactional

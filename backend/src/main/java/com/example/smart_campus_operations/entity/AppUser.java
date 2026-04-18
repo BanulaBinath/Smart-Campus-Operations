@@ -26,6 +26,8 @@ public class AppUser {
 
     private String name;
 
+    private String password;
+
     private String profilePicture;
 
     private String provider; // e.g., "GOOGLE"

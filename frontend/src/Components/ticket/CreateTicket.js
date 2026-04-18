@@ -50,7 +50,7 @@ function CreateTicket() {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout role="USER">
       <section className="create-ticket-box">
         <div className="create-ticket-header">
           <h1>Create Support Ticket</h1>

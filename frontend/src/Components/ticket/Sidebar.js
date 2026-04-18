@@ -2,15 +2,43 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
 
-function Sidebar() {
+function Sidebar({ role }) {
+  const menus = {
+    USER: [
+      { to: '/tickets', label: 'Dashboard' },
+      { to: '/tickets/create', label: 'Create Ticket' },
+      { to: '/tickets/chat', label: 'Comments' },
+    ],
+    TECHNICIAN: [
+      { to: '/technician', label: 'Dashboard' },
+      { to: '/technician/tickets', label: 'My Tickets' },
+      { to: '/tickets/chat', label: 'Comments' },
+    ],
+    ADMIN: [
+      { to: '/admin', label: 'Dashboard' },
+      { to: '/admin/tickets', label: 'All Tickets' },
+      { to: '/tickets/chat', label: 'Comments' },
+    ],
+  };
+
+  const links = menus[role] || [];
+
   return (
     <aside className="ticket-sidebar">
-      <h3 className="ticket-sidebar-title">Support Tickets</h3>
+      <h3 className="ticket-sidebar-title">
+        {role === 'ADMIN'
+          ? 'Admin Panel'
+          : role === 'TECHNICIAN'
+          ? 'Technician Panel'
+          : 'Support Tickets'}
+      </h3>
 
       <div className="ticket-sidebar-links">
-        <Link to="/tickets">Dashboard</Link>
-        <Link to="/tickets/create">Create Ticket</Link>
-        <Link to="/tickets/chat">Ticket Chat</Link>
+        {links.map((item) => (
+          <Link key={item.to} to={item.to}>
+            {item.label}
+          </Link>
+        ))}
       </div>
     </aside>
   );

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DashboardLayout from './DashboardLayout';
 import './TicketChat.css';
 
-function TicketChat() {
+function TicketChat({ role }) {
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -66,7 +66,7 @@ function TicketChat() {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout role={role}>
       <section className="ticket-chat-page">
         <div className="ticket-chat-header">
           <div>

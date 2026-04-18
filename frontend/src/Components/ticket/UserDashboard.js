@@ -32,7 +32,7 @@ function UserDashboard() {
   ];
 
   return (
-    <DashboardLayout>
+    <DashboardLayout role="USER">
       <section className="user-dashboard-box">
         <div className="dashboard-top-row">
           <div>

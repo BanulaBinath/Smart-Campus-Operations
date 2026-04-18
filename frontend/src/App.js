@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Login from './Components/home/login';
 import SignUp from './Components/home/signUp';
 import Facility from './Components/admin/Facility';
-import AdminPage from './Components/admin/AdminPage';
+import AdminPage from './Components/admin/adminPage';
 import AddFacility from './Components/admin/addFacility';
 
 function App() {

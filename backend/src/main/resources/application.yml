@@ -3,19 +3,18 @@ spring:
     name: smart-campus-operations
 
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:smart_campus}?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/smart_campus_operations
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:NewPassword123!}
+    password: YOUR_MYSQL_PASSWORD
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
 
   security:
     oauth2:

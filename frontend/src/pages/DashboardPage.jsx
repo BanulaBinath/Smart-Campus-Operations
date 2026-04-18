@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import TopBar from '../components/layout/TopBar';
-import Sidebar from '../components/layout/Sidebar';
+import TopBar from '../Components/layout/TopBar';
+import Sidebar from '../Components/layout/Sidebar';
 import { useAuth } from '../context/AuthContext';
 
 const DashboardPage = () => {

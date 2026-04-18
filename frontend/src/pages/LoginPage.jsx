@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { GraduationCap } from 'lucide-react';
+import { GOOGLE_OAUTH_URL, navigateToBackend } from '../config/backendUrls';
 
 const LoginPage = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -21,7 +22,7 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     // Redirect browser to Spring Boot's OAuth2 authorization endpoint
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    navigateToBackend(GOOGLE_OAUTH_URL);
   };
 
   return (

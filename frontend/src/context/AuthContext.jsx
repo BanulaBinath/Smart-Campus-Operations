@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/axios';
+import { LOGOUT_URL, navigateToBackend } from '../config/backendUrls';
 
 const AuthContext = createContext(null);
 
@@ -25,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    window.location.href = 'http://localhost:8080/api/v1/auth/logout';
+    navigateToBackend(LOGOUT_URL);
   };
 
   return (

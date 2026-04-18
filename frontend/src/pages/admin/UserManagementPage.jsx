@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ShieldAlert, UserPlus } from 'lucide-react';
-import TopBar from '../../components/layout/TopBar';
-import Sidebar from '../../components/layout/Sidebar';
-import UserTable from '../../components/admin/UserTable';
-import EditRoleModal from '../../components/admin/EditRoleModal';
-import CreateUserModal from '../../components/admin/CreateUserModal';
-import Toast from '../../components/ui/Toast';
+import TopBar from '../../Components/layout/TopBar';
+import Sidebar from '../../Components/layout/Sidebar';
+import UserTable from '../../Components/admin/UserTable';
+import EditRoleModal from '../../Components/admin/EditRoleModal';
+import CreateUserModal from '../../Components/admin/CreateUserModal';
+import Toast from '../../Components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { userApi } from '../../api/userApi';
 import { useAuth } from '../../context/AuthContext';

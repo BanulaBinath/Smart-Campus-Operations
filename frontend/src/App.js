@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 // Pages
 import LoginPage from './pages/LoginPage';
@@ -12,12 +12,12 @@ import UserManagementPage from './pages/admin/UserManagementPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Original Components
-import Home from './components/home/home';
-import SignUp from './components/home/signUp';
-import Login from './components/home/login';
+import Home from './Components/home/home';
+import SignUp from './Components/home/signUp';
+import Login from './Components/home/login';
 
 // Role Redirect logic
-import RoleRedirect from './components/RoleRedirect';
+import RoleRedirect from './Components/RoleRedirect';
 
 function App() {
   return (

@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../config/backendUrls';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: API_BASE_URL,
   withCredentials: true, // Send cookies with every request
   headers: {
     'Content-Type': 'application/json',

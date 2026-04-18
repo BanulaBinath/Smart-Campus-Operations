@@ -4,6 +4,7 @@ import api from '../../api/axios';
 import Nav from './nav';
 import Footer from './footer';
 import './login.css';
+import { GOOGLE_OAUTH_URL, navigateToBackend } from '../../config/backendUrls';
 
 import { useAuth } from '../../context/AuthContext';
 
@@ -98,7 +99,7 @@ function Login() {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+                navigateToBackend(GOOGLE_OAUTH_URL);
               }}
               className="flex w-full items-center justify-center gap-3 rounded-[12px] border border-[#c6ddff] bg-white px-4 py-3 text-sm font-semibold text-[#0b347c] shadow-sm transition-all hover:bg-[#f4f9ff] hover:-translate-y-0.5"
               type="button"

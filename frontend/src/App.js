@@ -1,22 +1,64 @@
-import Home from './Components/home/home';
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import Login from './Components/home/login';
-import SignUp from './Components/home/signUp';
-import Facility from './Components/admin/Facility';
-import AdminPage from './Components/admin/AdminPage';
-import AddFacility from './Components/admin/addFacility';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Pages
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import NotificationsPage from './pages/NotificationsPage';
+import ProfilePage from './pages/ProfilePage';
+import UserManagementPage from './pages/admin/UserManagementPage';
+import NotFoundPage from './pages/NotFoundPage';
+
+// Original Components
+import Home from './components/home/home';
+import SignUp from './components/home/signUp';
+import Login from './components/home/login';
+
+// Role Redirect logic
+import RoleRedirect from './components/RoleRedirect';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/admin/facilities" element={<Facility />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/admin/add-facility" element={<AddFacility />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        {/* Original Public Routes from other members */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        {/* My Public Route */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* Protected Routes (Any Authenticated User) */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<RoleRedirect />} />
+          <Route path="/dashboard" element={<RoleRedirect />} />
+          
+          {/* Role Specific Dashboards */}
+          <Route path="/admin/dashboard" element={<DashboardPage />} />
+          <Route path="/student/dashboard" element={<DashboardPage />} />
+          <Route path="/lecturer/dashboard" element={<DashboardPage />} />
+          <Route path="/technician/dashboard" element={<DashboardPage />} />
+
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          
+          {/* Stubs for other modules */}
+          <Route path="/facilities" element={<DashboardPage />} />
+          <Route path="/bookings" element={<DashboardPage />} />
+          <Route path="/incidents" element={<DashboardPage />} />
+        </Route>
+        
+        {/* Admin Only Routes */}
+        <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+          <Route path="/admin/users" element={<UserManagementPage />} />
+        </Route>
+
+        {/* Fallback */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 

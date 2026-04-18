@@ -1,7 +1,4 @@
 import React, { useState } from 'react'
-import Sidebar from './sidebar'
-import { useNavigate } from 'react-router-dom'
-import './addFacility.css'
 import { addFacility, setFacilityRoomNumber } from '../../services/facilityService'
 
 const FACILITY_NAME_OPTIONS = [
@@ -16,8 +13,7 @@ const FACILITY_TYPE_OPTIONS = ['CLASSROOM', 'LAB', 'HALL', 'SPORTS', 'EQUIPMENT'
 const CATEGORY_OPTIONS = ['Academic', 'Sports']
 const STATUS_OPTIONS = ['ACTIVE', 'MAINTENANCE', 'INACTIVE']
 
-function AddFacility() {
-  const navigate = useNavigate()
+function AddFacility({ onSuccess }) {
   const [formData, setFormData] = useState({
     name: '',
     type: '',
@@ -117,7 +113,9 @@ function AddFacility() {
         status: '',
         description: '',
       })
-      navigate('/admin/facilities')
+      if (onSuccess) {
+        onSuccess()
+      }
     } catch {
       setError('Unable to add facility. Please try again.')
     } finally {
@@ -126,130 +124,119 @@ function AddFacility() {
   }
 
   return (
-    <div className="admin-shell">
-      <Sidebar />
+    <div className="p-6">
+      <div className="mb-6 pb-6 border-b border-[var(--color-border)]">
+        <h2 className="text-xl font-bold text-[var(--color-text)]">Add New Facility</h2>
+        <p className="text-sm text-[var(--color-text-muted)] mt-1">
+          Capture the essential information for a new facility using a simple and professional form.
+        </p>
+      </div>
 
-      <main className="admin-content add-facility-page">
-        <section className="form-hero">
-          <p className="page-eyebrow">Campus Operations</p>
-          <h1>Add Facility</h1>
-          <p className="page-description">
-            Capture the essential information for a new facility using a simple and professional form.
-          </p>
-        </section>
+      {error && (
+        <div className="mb-6 bg-red-50 text-red-600 text-sm p-4 rounded-lg border border-red-100 flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-red-600"></span>
+          {error}
+        </div>
+      )}
 
-        <section className="form-card">
-          {error && <div className="inline-message inline-message-error">{error}</div>}
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Facility Name</label>
+            <select name="name" value={formData.name} onChange={handleChange} required className="w-full px-4 py-2.5 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all">
+              <option value="" disabled>Select Facility Name</option>
+              {FACILITY_NAME_OPTIONS.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
 
-          <form className="facility-form" onSubmit={handleSubmit}>
-            <div className="form-grid">
-              <label className="form-field">
-                <span>Facility Name</span>
-                <select name="name" value={formData.name} onChange={handleChange} required>
-                  <option value="" disabled>
-                    Select Facility Name
-                  </option>
-                  {FACILITY_NAME_OPTIONS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Facility Type</label>
+            <select name="type" value={formData.type} onChange={handleChange} required className="w-full px-4 py-2.5 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all">
+              <option value="" disabled>Select Type</option>
+              {FACILITY_TYPE_OPTIONS.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
 
-              <label className="form-field">
-                <span>Facility Type</span>
-                <select className="facility-type-select" name="type" value={formData.type} onChange={handleChange} required>
-                  <option value="" disabled>
-                    Select Type
-                  </option>
-                  {FACILITY_TYPE_OPTIONS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Category</label>
+            <select name="category" value={formData.category} onChange={handleChange} required className="w-full px-4 py-2.5 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all">
+              <option value="" disabled>Select Category</option>
+              {CATEGORY_OPTIONS.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
 
-              <label className="form-field">
-                <span>Category</span>
-                <select name="category" value={formData.category} onChange={handleChange} required>
-                  <option value="" disabled>
-                    Select Category
-                  </option>
-                  {CATEGORY_OPTIONS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              {!isGroundType && (
-                <label className="form-field">
-                  <span>Capacity</span>
-                  <input
-                    type="number"
-                    name="capacity"
-                    value={formData.capacity}
-                    onChange={handleChange}
-                    placeholder="Enter capacity"
-                    min="1"
-                    max="60"
-                    required
-                  />
-                  <small className="field-hint">Maximum allowed capacity is 60.</small>
-                </label>
-              )}
-
-              {needsRoomNumber && (
-                <label className="form-field">
-                  <span>Room Number</span>
-                  <input
-                    type="text"
-                    name="roomNumber"
-                    value={formData.roomNumber}
-                    onChange={handleChange}
-                    placeholder="Enter room number"
-                    required
-                  />
-                </label>
-              )}
-
-              <label className="form-field">
-                <span>Status</span>
-                <select name="status" value={formData.status} onChange={handleChange} required>
-                  <option value="" disabled>
-                    Select status
-                  </option>
-                  {STATUS_OPTIONS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="form-field form-field-full">
-                <span>Description</span>
-                <textarea
-                  name="description"
-                  rows="5"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="Add a short description of this facility"
-                />
-              </label>
+          {!isGroundType && (
+            <div className="space-y-2">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Capacity</label>
+              <input
+                type="number"
+                name="capacity"
+                value={formData.capacity}
+                onChange={handleChange}
+                placeholder="Enter capacity"
+                min="1"
+                max="60"
+                required
+                className="w-full px-4 py-2.5 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all"
+              />
+              <p className="text-xs text-[var(--color-text-placeholder)] mt-1">Maximum allowed: 60</p>
             </div>
+          )}
 
-            <div className="form-actions">
-              <button type="submit" className="submit-button" disabled={loading}>
-                {loading ? 'Saving...' : 'Save Facility'}
-              </button>
+          {needsRoomNumber && (
+            <div className="space-y-2">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Room Number</label>
+              <input
+                type="text"
+                name="roomNumber"
+                value={formData.roomNumber}
+                onChange={handleChange}
+                placeholder="Enter room number"
+                required
+                className="w-full px-4 py-2.5 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all"
+              />
             </div>
-          </form>
-        </section>
-      </main>
+          )}
+
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Status</label>
+            <select name="status" value={formData.status} onChange={handleChange} required className="w-full px-4 py-2.5 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all">
+              <option value="" disabled>Select status</option>
+              {STATUS_OPTIONS.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Description</label>
+          <textarea
+            name="description"
+            rows="4"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Add a short description of this facility"
+            className="w-full px-4 py-2.5 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all"
+          />
+        </div>
+
+        <div className="pt-4 flex justify-end">
+          <button type="submit" disabled={loading} className="flex items-center justify-center min-w-[140px] rounded-[10px] bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white shadow-[0_4px_12px_rgba(var(--color-primary-rgb),0.3)] hover:bg-[var(--color-primary-hover)] transition-all disabled:opacity-50">
+            {loading ? (
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+            ) : (
+              'Save Facility'
+            )}
+          </button>
+        </div>
+      </form>
     </div>
   )
 }

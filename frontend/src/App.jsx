@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
+import FacilitiesPage from './pages/admin/FacilitiesPage';
+
 // Pages
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -27,7 +29,7 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             
             {/* Stubs for other modules */}
-            <Route path="/facilities" element={<DashboardPage />} />
+            <Route path="/facilities" element={<FacilitiesPage />} />
             <Route path="/bookings" element={<DashboardPage />} />
             <Route path="/incidents" element={<DashboardPage />} />
           </Route>

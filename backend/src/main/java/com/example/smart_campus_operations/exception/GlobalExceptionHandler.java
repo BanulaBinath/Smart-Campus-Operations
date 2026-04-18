@@ -40,8 +40,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneral(Exception ex, HttpServletRequest request) {
+        java.io.StringWriter sw = new java.io.StringWriter();
+        ex.printStackTrace(new java.io.PrintWriter(sw));
         org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class).error("Unexpected error: ", ex);
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", "An unexpected error occurred", request);
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", sw.toString(), request);
     }
 
     private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String error, String message, HttpServletRequest request) {

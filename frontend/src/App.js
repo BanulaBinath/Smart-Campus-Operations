@@ -10,6 +10,7 @@ import NotificationsPage from './pages/NotificationsPage';
 import ProfilePage from './pages/ProfilePage';
 import UserManagementPage from './pages/admin/UserManagementPage';
 import NotFoundPage from './pages/NotFoundPage';
+import FacilitiesPage from './pages/admin/FacilitiesPage';
 
 // Original Components
 import Home from './components/home/home';
@@ -45,7 +46,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           
           {/* Stubs for other modules */}
-          <Route path="/facilities" element={<DashboardPage />} />
+          <Route path="/facilities" element={<FacilitiesPage />} />
           <Route path="/bookings" element={<DashboardPage />} />
           <Route path="/incidents" element={<DashboardPage />} />
         </Route>

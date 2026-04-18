@@ -26,18 +26,18 @@ public class FacilityController {
     }
 
     @GetMapping("/{id}")
-    public FacilityResponseDTO getById(@PathVariable Long id) {
+    public FacilityResponseDTO getById(@PathVariable("id") Long id) {
         return service.getById(id);
     }
 
     @PutMapping("/{id}")
-    public FacilityResponseDTO update(@PathVariable Long id,
+    public FacilityResponseDTO update(@PathVariable("id") Long id,
                                       @RequestBody FacilityRequestDTO dto) {
         return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         service.delete(id);
         return "Facility deleted successfully";
     }

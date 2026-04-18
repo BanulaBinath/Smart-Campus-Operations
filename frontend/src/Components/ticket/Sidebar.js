@@ -12,12 +12,12 @@ function Sidebar({ role }) {
     TECHNICIAN: [
       { to: '/technician', label: 'Dashboard' },
       { to: '/technician/tickets', label: 'My Tickets' },
-      { to: '/tickets/chat', label: 'Comments' },
+      { to: '/technician/chat', label: 'Comments' },
     ],
     ADMIN: [
-      { to: '/admin', label: 'Dashboard' },
+      { to: '/admin', label: 'Stats' },
       { to: '/admin/tickets', label: 'All Tickets' },
-      { to: '/tickets/chat', label: 'Comments' },
+      { to: '/admin/techs', label: 'Techs' },
     ],
   };
 

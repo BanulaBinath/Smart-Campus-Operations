@@ -1,5 +1,6 @@
 import React from 'react';
 import { format } from 'date-fns';
+import { Trash2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import RoleBadge from './RoleBadge';
 
@@ -7,8 +8,9 @@ import RoleBadge from './RoleBadge';
  * @param {Object} props
  * @param {Array} props.users
  * @param {Function} props.onEditRole
+ * @param {Function} props.onDelete
  */
-const UserTable = ({ users, onEditRole }) => {
+const UserTable = ({ users, onEditRole, onDelete }) => {
   const { user: currentUser } = useAuth();
 
   const getAvatarColor = (name) => {
@@ -90,12 +92,25 @@ const UserTable = ({ users, onEditRole }) => {
                       Current User
                     </span>
                   ) : (
-                    <button
-                      onClick={() => onEditRole(user)}
-                      className="rounded-[8px] border border-[var(--color-border)] bg-white px-3 py-1.5 text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary-light)]"
-                    >
-                      Edit Role
-                    </button>
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => onEditRole(user)}
+                        className="rounded-[8px] border border-[var(--color-border)] bg-white px-3 py-1.5 text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary-light)]"
+                      >
+                        Edit Role
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (window.confirm(`Are you sure you want to delete ${user.name}? This action cannot be undone.`)) {
+                            onDelete(user.id);
+                          }
+                        }}
+                        className="rounded-[8px] border border-[var(--color-border)] bg-white p-1.5 text-[var(--color-danger)] transition-colors hover:bg-red-50 hover:border-red-200"
+                        title="Delete User"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
                   )}
                 </td>
               </tr>

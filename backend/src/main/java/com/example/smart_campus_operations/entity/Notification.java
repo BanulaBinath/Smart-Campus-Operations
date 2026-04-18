@@ -30,8 +30,9 @@ public class Notification {
     @Column(nullable = false)
     private String message;
 
+    @Column(name = "is_read", nullable = false)
     @Builder.Default
-    private boolean isRead = false;
+    private boolean read = false;
 
     private UUID referenceId;
 

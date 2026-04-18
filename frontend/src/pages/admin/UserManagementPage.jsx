@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShieldAlert } from 'lucide-react';
+import { Search, ShieldAlert, UserPlus } from 'lucide-react';
 import TopBar from '../../components/layout/TopBar';
 import Sidebar from '../../components/layout/Sidebar';
 import UserTable from '../../components/admin/UserTable';
 import EditRoleModal from '../../components/admin/EditRoleModal';
+import CreateUserModal from '../../components/admin/CreateUserModal';
 import Toast from '../../components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { userApi } from '../../api/userApi';
@@ -15,6 +16,7 @@ const UserManagementPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL'); // ALL, USER, ADMIN, TECHNICIAN
   const [editingUser, setEditingUser] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   
   const { toasts, removeToast, success, error } = useToast();
   const { fetchCurrentUser } = useAuth(); // If they update their own role, might need to re-fetch, though they are admin so maybe not.
@@ -30,7 +32,7 @@ const UserManagementPage = () => {
       setUsers(data);
     } catch (err) {
       console.error('Failed to fetch users', err);
-      // In a real app we'd trigger an error toast here
+      error('Failed to load user list.');
     } finally {
       setLoading(false);
     }
@@ -45,6 +47,30 @@ const UserManagementPage = () => {
     } catch (err) {
       console.error('Failed to update role', err);
       error('Failed to update role. Please try again.');
+    }
+  };
+
+  const handleCreateUser = async (userData) => {
+    try {
+      const newUser = await userApi.createUser(userData);
+      setUsers([newUser, ...users]);
+      success('New user created successfully');
+      setShowCreateModal(false);
+    } catch (err) {
+      console.error('Failed to create user', err);
+      error(err.response?.data?.message || 'Failed to create user. Please try again.');
+      throw err; // Re-throw to be caught by the modal for internal error handling
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    try {
+      await userApi.deleteUser(userId);
+      setUsers(users.filter(u => u.id !== userId));
+      success('User deleted successfully');
+    } catch (err) {
+      console.error('Failed to delete user', err);
+      error('Failed to delete user. Please try again.');
     }
   };
 
@@ -73,6 +99,14 @@ const UserManagementPage = () => {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-primary)] text-white text-sm font-bold rounded-[8px] hover:bg-[var(--color-primary-hover)] transition-all shadow-sm shadow-[var(--color-primary-light)]"
+                >
+                  <UserPlus size={18} />
+                  <span>New User</span>
+                </button>
+
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <Search size={18} className="text-[var(--color-text-muted)]" />
@@ -93,6 +127,7 @@ const UserManagementPage = () => {
                 >
                   <option value="ALL">All Roles</option>
                   <option value="USER">User (Default)</option>
+                  <option value="LECTURER">Lecturer</option>
                   <option value="TECHNICIAN">Technician</option>
                   <option value="ADMIN">Admin</option>
                 </select>
@@ -108,6 +143,7 @@ const UserManagementPage = () => {
                   <UserTable 
                     users={filteredUsers} 
                     onEditRole={(user) => setEditingUser(user)} 
+                    onDelete={handleDeleteUser}
                   />
                 )}
             </div>
@@ -131,6 +167,13 @@ const UserManagementPage = () => {
           user={editingUser}
           onClose={() => setEditingUser(null)}
           onSave={handleSaveRole}
+        />
+      )}
+
+      {showCreateModal && (
+        <CreateUserModal
+          onClose={() => setShowCreateModal(false)}
+          onSave={handleCreateUser}
         />
       )}
 

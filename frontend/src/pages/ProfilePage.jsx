@@ -1,15 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { useAuth } from '../context/AuthContext';
 import TopBar from '../components/layout/TopBar';
 import Sidebar from '../components/layout/Sidebar';
 import RoleBadge from '../components/admin/RoleBadge';
-import { LogOut } from 'lucide-react';
+import { LogOut, Save, Edit2, Trash2, X } from 'lucide-react';
+import { userApi } from '../api/userApi';
+import { useToast } from '../hooks/useToast';
+import Toast from '../components/ui/Toast';
 
 const ProfilePage = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, fetchCurrentUser } = useAuth();
+  const { toasts, removeToast, success, error } = useToast();
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: user?.name || '',
+    profilePicture: user?.profilePicture || ''
+  });
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   if (!user) return null;
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      await userApi.updateProfile(formData);
+      await fetchCurrentUser();
+      success('Profile updated successfully');
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Failed to update profile', err);
+      error('Failed to update profile. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm('WARNING: Are you sure you want to delete your account? This action is permanent and cannot be undone.')) {
+      setIsDeleting(true);
+      try {
+        await userApi.deleteProfile();
+        window.location.href = '/login';
+      } catch (err) {
+        console.error('Failed to delete account', err);
+        error('Failed to delete account. Please try again.');
+        setIsDeleting(false);
+      }
+    }
+  };
 
   return (
     <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
@@ -17,15 +59,24 @@ const ProfilePage = () => {
       <div className="flex flex-1 flex-col md:ml-[240px]">
         <TopBar title="My Profile" />
         
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="mx-auto max-w-2xl mt-8">
+        <main className="flex-1 overflow-y-auto p-6 flex flex-col items-center">
+          <div className="w-full max-w-2xl mt-8">
             
-            <div className="rounded-[12px] bg-[var(--color-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.08)] overflow-hidden">
-              <div className="h-32 bg-gradient-to-r from-[var(--color-primary)] to-[#3B82F6]"></div>
+            <div className="rounded-[16px] bg-[var(--color-surface)] shadow-[0_4px_20px_rgba(0,0,0,0.05)] overflow-hidden border border-[var(--color-border)]">
+              <div className="h-40 bg-gradient-to-br from-[#0d57c8] via-[#3B82F6] to-[#60A5FA] relative">
+                {!isEditing && (
+                  <button 
+                    onClick={() => setIsEditing(true)}
+                    className="absolute bottom-4 right-6 flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-white/30 transition-all hover:scale-105 z-10"
+                  >
+                    <Edit2 size={16} /> Edit Profile
+                  </button>
+                )}
+              </div>
               
-              <div className="px-8 pb-8">
-                <div className="relative -mt-16 mb-4 flex items-end justify-between">
-                  <div className="flex h-32 w-32 items-center justify-center rounded-full border-4 border-white bg-[var(--color-primary-light)] text-4xl font-bold text-[var(--color-primary-text)] shadow-sm shrink-0 overflow-hidden">
+              <div className="px-10 pb-10">
+                <div className="relative -mt-20 mb-6 flex items-end justify-between">
+                  <div className="flex h-40 w-40 items-center justify-center rounded-2xl border-4 border-white bg-[var(--color-primary-light)] text-5xl font-bold text-[var(--color-primary-text)] shadow-xl shrink-0 overflow-hidden group">
                     {user.profilePicture ? (
                       <img 
                         src={user.profilePicture} 
@@ -37,51 +88,104 @@ const ProfilePage = () => {
                       user.name?.charAt(0).toUpperCase()
                     )}
                   </div>
-                  <div className="mb-2">
+                  <div className="mb-4">
                     <RoleBadge role={user.role} />
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-bold mt-2">{user.name}</h2>
-                <p className="text-[var(--color-text-muted)] flex items-center gap-2 mb-8">
-                  {user.email}
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
-                  <span>Joined {user.createdAt ? format(new Date(user.createdAt), 'MMM yyyy') : 'Recently'}</span>
-                </p>
+                {isEditing ? (
+                  <form onSubmit={handleSave} className="space-y-6 animate-in slide-in-from-bottom-2">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-muted)]">Full Name</label>
+                      <input 
+                        type="text" 
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        required
+                        className="w-full px-4 py-3 border border-[var(--color-border)] rounded-[12px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-muted)]">Profile Picture URL</label>
+                      <input 
+                        type="url" 
+                        value={formData.profilePicture}
+                        onChange={(e) => setFormData({...formData, profilePicture: e.target.value})}
+                        placeholder="https://example.com/photo.jpg"
+                        className="w-full px-4 py-3 border border-[var(--color-border)] rounded-[12px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all"
+                      />
+                      <p className="text-[10px] text-[var(--color-text-muted)]">Use image hosted online for your avatar.</p>
+                    </div>
 
-                <div className="mb-8 rounded-lg border border-[var(--color-border)] p-4 flex items-start gap-4">
-                  <div className="mt-1">
-                    <svg className="w-6 h-6" viewBox="0 0 24 24">
-                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-sm">Account Linked to Google</h3>
-                    <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                      Your identity is managed securely by your university Google Workspace account. Your role ({user.role}) within this system is managed by administrators.
+                    <div className="flex items-center gap-3 pt-4">
+                      <button
+                        type="submit"
+                        disabled={isSaving}
+                        className="flex-1 flex items-center justify-center gap-2 rounded-[12px] bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--color-primary-light)] hover:bg-[var(--color-primary-hover)] transition-all disabled:opacity-50"
+                      >
+                        {isSaving ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div> : <><Save size={18} /> Save Changes</>}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsEditing(false);
+                          setFormData({ name: user.name, profilePicture: user.profilePicture });
+                        }}
+                        className="flex items-center justify-center p-3 rounded-[12px] bg-gray-100 text-[var(--color-text-muted)] hover:bg-gray-200 transition-all"
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <h2 className="text-3xl font-black mt-2 text-[#1E293B]">{user.name}</h2>
+                    <p className="text-[var(--color-text-muted)] flex items-center gap-3 mb-10 text-lg">
+                      {user.email}
+                      <span className="w-2 h-2 rounded-full bg-blue-400 opacity-20"></span>
+                      <span className="font-medium">Joined {user.createdAt ? format(new Date(user.createdAt), 'MMMM yyyy') : 'Recently'}</span>
                     </p>
-                  </div>
-                </div>
 
-                <div className="flex justify-start">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                       <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                          <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">System Authorization</h4>
+                          <p className="text-sm font-semibold text-slate-700">{user.role}</p>
+                       </div>
+                       <div className="p-5 rounded-2xl bg-blue-50/50 border border-blue-100">
+                          <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">Authenticating Via</h4>
+                          <p className="text-sm font-semibold text-blue-700">{user.provider || 'Local Account'}</p>
+                       </div>
+                    </div>
+                  </>
+                )}
+
+                <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-8"></div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
                   <button
                     onClick={logout}
-                    className="flex items-center gap-2 rounded-[8px] bg-white border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-danger)] transition-colors hover:bg-red-50 hover:border-red-200"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-[12px] bg-white border border-[var(--color-border)] px-6 py-3 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50 active:scale-95"
                   >
-                    <LogOut size={16} />
-                    Sign Out Securely
+                    <LogOut size={18} />
+                    Sign Out
+                  </button>
+
+                  <button
+                    onClick={handleDeleteAccount}
+                    disabled={isDeleting}
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-[12px] bg-red-50 px-6 py-3 text-sm font-bold text-red-600 transition-all hover:bg-red-100 active:scale-95 disabled:opacity-50"
+                  >
+                    {isDeleting ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-red-600 border-t-transparent"></div> : <><Trash2 size={18} /> Delete Account</>}
                   </button>
                 </div>
                 
               </div>
             </div>
-            
           </div>
         </main>
       </div>
+
+      <Toast toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

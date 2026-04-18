@@ -3,8 +3,8 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Login from './Components/home/login';
 import SignUp from './Components/home/signUp';
-import MyBookingsPage from './Components/MyBookingsPage';
-import AdminPage from './Components/adminPage';
+import MyBookingsPage from './Components/home/Mybookingspage';
+import AdminPage from './Components/admin/adminPage.js';
 
 function App() {
   return (

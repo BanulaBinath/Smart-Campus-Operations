@@ -1,7 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from './sidebar';
-import AdminBookingsPage from './AdminBookingsPage';
+import AdminBookingsPage from './Adminbookingpage';
+import Facility from './Facility';
 import './adminPage.css';
 
 function AdminDashboard() {
@@ -38,6 +39,7 @@ function AdminPage() {
         <Routes>
           <Route path="/" element={<AdminDashboard />} />
           <Route path="/bookings" element={<AdminBookingsPage />} />
+          <Route path="/facilities" element={<Facility />} />
         </Routes>
       </main>
     </div>

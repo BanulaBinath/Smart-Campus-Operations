@@ -1,5 +1,5 @@
 import React from "react";
-import { cancelBooking } from "../api/bookingApi";
+import { cancelBooking } from "../api/Bookingapi";
 
 const statusColors = {
   PENDING: "#f0ad4e",

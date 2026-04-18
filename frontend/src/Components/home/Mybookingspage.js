@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getMyBookings } from "../api/bookingApi";
-import BookingForm from "./BookingForm";
+import { getMyBookings } from "../api/Bookingapi";
+import BookingForm from "./Bookingform";
 import Nav from "./nav";
 import Footer from "./footer";
 

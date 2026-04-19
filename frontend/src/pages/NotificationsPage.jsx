@@ -55,31 +55,31 @@ const NotificationsPage = () => {
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+    <div className="flex h-screen bg-[#f8fafc] text-gray-900">
       <Sidebar />
       
       <div className="flex flex-1 flex-col md:ml-[240px]">
         <TopBar title="Notifications" />
         
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="mx-auto max-w-4xl">
+        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
+          <div className="max-w-5xl">
             
             {/* Header Area */}
             <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex overflow-x-auto rounded-lg bg-gray-100 p-1 shrink-0">
+              <div className="inline-flex rounded-xl bg-gray-200/50 p-1.5 shrink-0 border border-gray-200/50 backdrop-blur-sm">
                 {['ALL', 'UNREAD', 'BOOKINGS', 'TICKETS'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setFilter(tab)}
-                    className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors whitespace-nowrap ${
+                    className={`rounded-lg px-6 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
                       filter === tab
-                        ? 'bg-white text-[var(--color-text)] shadow-sm'
-                        : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
                     }`}
                   >
                     {tab.charAt(0) + tab.slice(1).toLowerCase()}
                     {tab === 'UNREAD' && unreadCount > 0 && (
-                      <span className="ml-2 rounded-full bg-[var(--color-primary-light)] px-2 py-0.5 text-xs text-[var(--color-primary-text)]">
+                      <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-bold ${filter === tab ? 'bg-white/20 text-white' : 'bg-red-100 text-red-600'}`}>
                         {unreadCount}
                       </span>
                     )}
@@ -90,32 +90,32 @@ const NotificationsPage = () => {
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="flex items-center justify-center gap-2 rounded-lg bg-white border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text)] transition-colors hover:bg-gray-50 shrink-0"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-white/80 backdrop-blur-md border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-white hover:shadow-md shrink-0"
                 >
-                  <CheckCheck size={16} />
+                  <CheckCheck size={18} className="text-blue-600" />
                   Mark all as read
                 </button>
               )}
             </div>
 
             {/* List Area */}
-            <div className="rounded-[12px] bg-[var(--color-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.08)] overflow-hidden">
+            <div className="rounded-3xl bg-white/60 backdrop-blur-xl border border-gray-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] min-h-[450px] overflow-hidden">
               {loading ? (
-                <div className="flex justify-center p-12">
-                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-primary)] border-t-transparent"></div>
+                <div className="flex justify-center p-20">
+                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent shadow-sm"></div>
                 </div>
               ) : filteredNotifications.length === 0 ? (
-                <div className="flex flex-col items-center justify-center p-16 text-center">
-                  <div className="mb-4 rounded-full bg-[var(--color-primary-light)] p-4">
-                    <CheckCheck size={32} className="text-[var(--color-primary)]" />
+                <div className="flex flex-col items-center justify-center p-24 text-center h-full bg-gradient-to-b from-transparent to-gray-50/50">
+                  <div className="mb-6 rounded-full bg-blue-50 p-5 shadow-sm border border-blue-100 transition-transform hover:scale-105">
+                    <CheckCheck size={40} className="text-blue-600" strokeWidth={2.5} />
                   </div>
-                  <h3 className="text-lg font-semibold text-[var(--color-text)]">You're all caught up!</h3>
-                  <p className="mt-1 text-[var(--color-text-muted)]">
+                  <h3 className="text-2xl font-bold text-gray-800 tracking-tight">You're all caught up!</h3>
+                  <p className="mt-3 text-base text-gray-500 font-medium">
                     No {filter !== 'ALL' ? filter.toLowerCase() : ''} notifications to show.
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-col">
+                <div className="flex flex-col divide-y divide-gray-100/80">
                   {filteredNotifications.map((notif) => (
                     <NotificationItem 
                       key={notif.id} 

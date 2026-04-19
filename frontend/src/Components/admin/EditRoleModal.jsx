@@ -17,8 +17,13 @@ const EditRoleModal = ({ user, onClose, onSave }) => {
   const roles = [
     {
       id: 'USER',
-      label: 'User',
+      label: 'Student',
       description: 'Can browse resources and submit bookings/tickets.'
+    },
+    {
+      id: 'LECTURER',
+      label: 'Lecturer',
+      description: 'Can book resources, request facilities, and submit tickets.'
     },
     {
       id: 'TECHNICIAN',
@@ -41,11 +46,11 @@ const EditRoleModal = ({ user, onClose, onSave }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm animate-in fade-in">
       <div className="w-full max-w-[400px] rounded-[12px] bg-[var(--color-surface)] shadow-2xl animate-in zoom-in-95">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[var(--color-border)] px-6 py-4">
           <h2 className="text-lg font-semibold text-[var(--color-text)]">Change Role</h2>
-          <button 
+          <button
             onClick={onClose}
             className="rounded p-1 text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-text)]"
           >
@@ -67,22 +72,21 @@ const EditRoleModal = ({ user, onClose, onSave }) => {
 
           <div className="space-y-3">
             <label className="text-sm font-medium text-[var(--color-text)]">Select new role:</label>
-            
+
             <div className="space-y-2">
               {roles.map((r) => (
-                <label 
-                  key={r.id} 
-                  className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${
-                    selectedRole === r.id 
-                      ? 'border-[var(--color-primary)] bg-[var(--color-primary-light)]/20' 
+                <label
+                  key={r.id}
+                  className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${selectedRole === r.id
+                      ? 'border-[var(--color-primary)] bg-[var(--color-primary-light)]/20'
                       : 'border-[var(--color-border)] hover:bg-[var(--color-bg)]'
-                  }`}
+                    }`}
                 >
                   <div className="flex h-5 items-center">
-                    <input 
-                      type="radio" 
-                      name="role" 
-                      value={r.id} 
+                    <input
+                      type="radio"
+                      name="role"
+                      value={r.id}
                       checked={selectedRole === r.id}
                       onChange={(e) => setSelectedRole(e.target.value)}
                       className="h-4 w-4 border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"

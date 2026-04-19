@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import TopBar from '../../components/layout/TopBar';
 import Sidebar from '../../components/layout/Sidebar';
 import { getAllFacilities } from '../../services/facilityService';
@@ -8,6 +8,11 @@ const StudentFacilitiesPage = () => {
   const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Filter states
+  const [selectedType, setSelectedType] = useState('ALL');
+  const [selectedStatus, setSelectedStatus] = useState('ALL');
+
   const { user } = useAuth();
 
   useEffect(() => {
@@ -44,6 +49,26 @@ const StudentFacilitiesPage = () => {
     alert(`Booking flow for facility ${facilityId} is not yet implemented.`);
   };
 
+  // Derive unique types and statuses for dropdowns
+  const availableTypes = useMemo(() => {
+    const types = new Set(facilities.map(f => f.type?.toUpperCase() || 'UNKNOWN'));
+    return ['ALL', ...Array.from(types).sort()];
+  }, [facilities]);
+
+  const availableStatuses = useMemo(() => {
+    const statuses = new Set(facilities.map(f => f.status?.toUpperCase() || 'UNKNOWN'));
+    return ['ALL', ...Array.from(statuses).sort()];
+  }, [facilities]);
+
+  // Apply filters
+  const filteredFacilities = useMemo(() => {
+    return facilities.filter(f => {
+      const typeMatch = selectedType === 'ALL' || (f.type?.toUpperCase() || 'UNKNOWN') === selectedType;
+      const statusMatch = selectedStatus === 'ALL' || (f.status?.toUpperCase() || 'UNKNOWN') === selectedStatus;
+      return typeMatch && statusMatch;
+    });
+  }, [facilities, selectedType, selectedStatus]);
+
   return (
     <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <Sidebar />
@@ -61,6 +86,40 @@ const StudentFacilitiesPage = () => {
               </div>
             </div>
 
+            {/* Filter Controls */}
+            <div className="bg-[var(--color-surface)] p-4 rounded-[12px] border border-[var(--color-border)] shadow-sm mb-6 flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <label htmlFor="typeFilter" className="block text-sm font-medium text-[var(--color-text-muted)] mb-1">
+                  Filter by Type
+                </label>
+                <select
+                  id="typeFilter"
+                  value={selectedType}
+                  onChange={(e) => setSelectedType(e.target.value)}
+                  className="w-full p-2 border border-[var(--color-border)] rounded-[8px] focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none text-sm"
+                >
+                  {availableTypes.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1">
+                <label htmlFor="statusFilter" className="block text-sm font-medium text-[var(--color-text-muted)] mb-1">
+                  Filter by Status
+                </label>
+                <select
+                  id="statusFilter"
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="w-full p-2 border border-[var(--color-border)] rounded-[8px] focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none text-sm"
+                >
+                  {availableStatuses.map(status => (
+                    <option key={status} value={status}>{status}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             {error && (
               <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-lg border border-red-100 flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-red-600"></span>
@@ -72,16 +131,24 @@ const StudentFacilitiesPage = () => {
               <div className="flex justify-center p-12">
                 <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-primary)] border-t-transparent"></div>
               </div>
-            ) : facilities.length === 0 ? (
+            ) : filteredFacilities.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-12 bg-[var(--color-surface)] rounded-[12px] border border-[var(--color-border)] border-dashed border-2">
-                <h2 className="text-lg font-semibold text-[var(--color-text)]">No Facilities Available</h2>
+                <h2 className="text-lg font-semibold text-[var(--color-text)]">No Facilities Found</h2>
                 <p className="text-sm text-[var(--color-text-muted)] mt-2">
-                  There are currently no facilities available for booking.
+                  There are no facilities matching your current filters.
                 </p>
+                {(selectedType !== 'ALL' || selectedStatus !== 'ALL') && (
+                  <button 
+                    onClick={() => { setSelectedType('ALL'); setSelectedStatus('ALL'); }}
+                    className="mt-4 text-[var(--color-primary)] text-sm font-semibold hover:underline"
+                  >
+                    Clear Filters
+                  </button>
+                )}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {facilities.map((facility) => (
+                {filteredFacilities.map((facility) => (
                   <div 
                     key={facility.id} 
                     className="bg-[var(--color-surface)] rounded-[12px] border border-[var(--color-border)] shadow-[0_1px_3px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col hover:shadow-md transition-shadow"

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import TopBar from '../components/layout/TopBar';
 import Sidebar from '../components/layout/Sidebar';
 import { useAuth } from '../context/AuthContext';
+import { notificationApi } from '../api/notificationApi';
+import NotificationItem from '../components/notifications/NotificationItem';
 import { 
   CalendarCheck, 
   AlertTriangle, 
@@ -10,13 +12,31 @@ import {
   Bell,
   ArrowRight,
   TrendingUp,
-  Clock
+  Clock,
+  CheckCheck
 } from 'lucide-react';
 
 const DashboardPage = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const [notifications, setNotifications] = useState([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(true);
   
+  useEffect(() => {
+    const fetchRecentNotifications = async () => {
+      try {
+        setLoadingNotifications(true);
+        const data = await notificationApi.getNotifications();
+        setNotifications(data.slice(0, 3)); // show top 3 on dashboard
+      } catch (error) {
+        console.error('Failed to fetch format notifications', error);
+      } finally {
+        setLoadingNotifications(false);
+      }
+    };
+    fetchRecentNotifications();
+  }, []);
+
   // Extract role prefix from path (e.g. /admin/dashboard -> admin)
   const rolePrefix = location.pathname.split('/')[1] || 'student';
   const roleTitle = rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1);
@@ -115,16 +135,43 @@ const DashboardPage = () => {
               </div>
             </div>
 
-            {/* Minimal Placeholder Section */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-start gap-4">
-              <div className="bg-blue-50 text-blue-600 p-3 rounded-xl flex-shrink-0">
-                <AlertTriangle size={24} />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">System Updates</h3>
-                <p className="text-sm text-gray-600 font-medium">
-                  We are currently upgrading several modules. More features and detailed insights will appear here soon once the components are fully integrated.
-                </p>
+            {/* Recent Notifications Widget aligned to the new standard */}
+            <div>
+              <h3 className="text-xl font-bold text-[var(--color-text)] mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Bell size={24} className="text-[var(--color-primary)]" />
+                  Recent Notifications
+                </div>
+                <Link to="/notifications" className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+                  View All
+                </Link>
+              </h3>
+              
+              <div className="rounded-3xl bg-white/60 backdrop-blur-xl border border-gray-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+                {loadingNotifications ? (
+                  <div className="flex justify-center p-12">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent shadow-sm"></div>
+                  </div>
+                ) : notifications.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center p-12 text-center bg-gradient-to-b from-transparent to-gray-50/50">
+                    <div className="mb-4 rounded-full bg-blue-50 p-4 shadow-sm border border-blue-100 transition-transform hover:scale-105">
+                      <CheckCheck size={32} className="text-blue-600" strokeWidth={2.5} />
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-800 tracking-tight">You're all caught up!</h3>
+                    <p className="mt-2 text-sm text-gray-500 font-medium">
+                      No recent notifications to show.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col divide-y divide-gray-100/80">
+                    {notifications.map((notif) => (
+                      <NotificationItem 
+                        key={notif.id} 
+                        notification={notif} 
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

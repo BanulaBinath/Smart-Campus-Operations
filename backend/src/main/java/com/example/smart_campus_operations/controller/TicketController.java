@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.smart_campus_operations.model.Ticket;
 import com.example.smart_campus_operations.service.TicketService;
 
@@ -50,6 +49,12 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.getTicketsByUser(createdBy));
     }
 
+    // GET tickets by technician
+    @GetMapping("/technician/{assignedTo}")
+    public ResponseEntity<List<Ticket>> getTicketsByTechnician(@PathVariable String assignedTo) {
+        return ResponseEntity.ok(ticketService.getTicketsByTechnician(assignedTo));
+    }
+
     // GET tickets by status
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Ticket>> getTicketsByStatus(@PathVariable String status) {
@@ -82,6 +87,12 @@ public class TicketController {
     public ResponseEntity<Ticket> resolveTicket(@PathVariable Long id,
                                                 @RequestBody Map<String, String> body) {
         return ResponseEntity.ok(ticketService.resolveTicket(id, body.get("resolutionNotes")));
+    }
+
+    // CLOSE ticket
+    @PatchMapping("/{id}/close")
+    public ResponseEntity<Ticket> closeTicket(@PathVariable Long id) {
+        return ResponseEntity.ok(ticketService.closeTicket(id));
     }
 
     // DELETE ticket

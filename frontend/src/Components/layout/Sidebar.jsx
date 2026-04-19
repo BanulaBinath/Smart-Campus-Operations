@@ -22,6 +22,8 @@ const Sidebar = () => {
 
   if (user?.role === 'ADMIN' || user?.role === 'TECHNICIAN') {
     navItems.push({ name: 'Facilities', path: '/facilities', icon: Building2 });
+  } else if (user?.role === 'STUDENT' || user?.role === 'USER' || user?.role === 'LECTURER') {
+    navItems.push({ name: 'Facilities', path: '/student/facilities', icon: Building2 });
   }
 
   navItems.push(

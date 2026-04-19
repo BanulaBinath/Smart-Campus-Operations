@@ -1,8 +1,17 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import TopBar from '../components/layout/TopBar';
 import Sidebar from '../components/layout/Sidebar';
 import { useAuth } from '../context/AuthContext';
+import { 
+  CalendarCheck, 
+  AlertTriangle, 
+  Building2, 
+  Bell,
+  ArrowRight,
+  TrendingUp,
+  Clock
+} from 'lucide-react';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -11,38 +20,114 @@ const DashboardPage = () => {
   // Extract role prefix from path (e.g. /admin/dashboard -> admin)
   const rolePrefix = location.pathname.split('/')[1] || 'student';
   const roleTitle = rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1);
+  const isStudent = rolePrefix === 'student' || user?.role === 'USER';
+  
+  const quickActions = [
+    {
+      title: 'Book Facility',
+      description: 'Reserve campus spaces for events or study',
+      icon: Building2,
+      path: isStudent ? '/student/facilities' : '/facilities',
+      color: 'bg-blue-50 text-blue-600',
+      hoverColor: 'hover:bg-blue-100 hover:border-blue-300'
+    },
+    {
+      title: 'My Bookings',
+      description: 'View and manage your current reservations',
+      icon: CalendarCheck,
+      path: '/bookings',
+      color: 'bg-indigo-50 text-indigo-600',
+      hoverColor: 'hover:bg-indigo-100 hover:border-indigo-300'
+    },
+    {
+      title: 'Report Incident',
+      description: 'Report maintenance or security issues',
+      icon: AlertTriangle,
+      path: '/incidents',
+      color: 'bg-orange-50 text-orange-600',
+      hoverColor: 'hover:bg-orange-100 hover:border-orange-300'
+    },
+    {
+      title: 'Notifications',
+      description: 'Check latest updates and announcements',
+      icon: Bell,
+      path: '/notifications',
+      color: 'bg-purple-50 text-purple-600',
+      hoverColor: 'hover:bg-purple-100 hover:border-purple-300'
+    }
+  ];
   
   return (
     <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <Sidebar />
       <div className="flex flex-1 flex-col md:ml-[240px]">
         <TopBar title={`${roleTitle} Dashboard`} />
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
-          <div className="mb-8">
-             <h2 className="text-2xl font-bold mb-1">Welcome back, {user?.name?.split(' ')[0]}!</h2>
-             <p className="text-[var(--color-text-muted)]">Here's your {rolePrefix} view of campus operations today.</p>
-          </div>
-          
-          {/* Quick Metrics Stubs */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-            {[
-              { title: 'My Bookings', value: '2', color: 'var(--color-primary)' },
-              { title: 'Open Tickets', value: '1', color: 'var(--color-warning)' },
-              { title: 'Facilities Online', value: '24', color: 'var(--color-success)' },
-              { title: 'Pending Approval', value: '0', color: 'var(--color-info)' }
-            ].map((stat) => (
-              <div key={stat.title} className="rounded-xl bg-white p-6 shadow-sm border border-[var(--color-border)]">
-                <p className="text-sm font-medium text-[var(--color-text-muted)] mb-2">{stat.title}</p>
-                <p className="text-3xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
+        <main className="flex-1 overflow-y-auto px-6 py-8">
+          <div className="max-w-6xl mx-auto space-y-8">
+            
+            {/* Hero Welcome Section */}
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[var(--color-primary)] to-blue-500 text-white shadow-lg p-8 md:p-10">
+              <div className="relative z-10">
+                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">
+                  Welcome back, {user?.name?.split(' ')[0] || 'Student'}!
+                </h2>
+                <p className="text-blue-100 text-lg max-w-2xl font-medium">
+                  Here's an overview of your campus operations today. Stay updated with your latest bookings and campus activity.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-4">
+                   <Link to={isStudent ? '/student/facilities' : '/facilities'} className="inline-flex items-center justify-center px-5 py-2.5 bg-white text-[var(--color-primary)] font-semibold rounded-lg shadow-sm hover:bg-gray-50 transition-all">
+                     Explore Facilities
+                   </Link>
+                </div>
               </div>
-            ))}
-          </div>
+              <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-1/4 -translate-y-1/4">
+                 <svg width="400" height="400" viewBox="0 0 24 24" fill="currentColor">
+                   <path d="M12 2L2 7l10 5 10-5-10-5zm0 7.5l-10-5v9.5l10 5 10-5V4.5l-10 5z"/>
+                 </svg>
+              </div>
+            </div>
+            
+            {/* Quick Actions Grid */}
+            <div>
+              <h3 className="text-xl font-bold text-[var(--color-text)] mb-4 flex items-center gap-2">
+                <TrendingUp size={24} className="text-[var(--color-primary)]" />
+                Quick Actions
+              </h3>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {quickActions.map((action) => (
+                  <Link 
+                    key={action.title} 
+                    to={action.path}
+                    className={`block p-5 rounded-2xl bg-white border border-gray-100 shadow-sm transition-all duration-200 group ${action.hoverColor}`}
+                  >
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${action.color}`}>
+                      <action.icon size={24} className="group-hover:scale-110 transition-transform" />
+                    </div>
+                    <h4 className="text-lg font-bold text-gray-900 mb-1 flex items-center justify-between">
+                      {action.title}
+                      <ArrowRight size={16} className="text-gray-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                    </h4>
+                    <p className="text-sm text-gray-500 leading-relaxed font-medium">
+                      {action.description}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-          <div className="p-8 border-2 border-dashed border-[var(--color-border)] rounded-xl bg-[var(--color-bg)]/50 text-center">
-             <h3 className="text-lg font-semibold text-[var(--color-text-muted)]">Dashboard Area</h3>
-             <p className="text-sm text-[var(--color-text-placeholder)] mt-2">
-               (Colleague handles Module A, B, and C implementations which will integrate here)
-             </p>
+            {/* Minimal Placeholder Section */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-start gap-4">
+              <div className="bg-blue-50 text-blue-600 p-3 rounded-xl flex-shrink-0">
+                <AlertTriangle size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">System Updates</h3>
+                <p className="text-sm text-gray-600 font-medium">
+                  We are currently upgrading several modules. More features and detailed insights will appear here soon once the components are fully integrated.
+                </p>
+              </div>
+            </div>
+
           </div>
         </main>
       </div>

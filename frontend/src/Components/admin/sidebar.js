@@ -12,10 +12,10 @@ function Sidebar() {
   return (
     <aside className="admin-sidebar">
       <div className="sidebar-brand">
-        <div className="brand-mark">SC</div>
+        <div className="brand-mark" style={{ background: 'linear-gradient(135deg, #3b82f6, #9333ea)' }}>CO</div>
         <div>
           <p className="brand-kicker">Admin Panel</p>
-          <h1>Smart Campus Admin</h1>
+          <h1 style={{ fontWeight: '800', letterSpacing: '-0.05em' }}>CampusOps</h1>
         </div>
       </div>
 

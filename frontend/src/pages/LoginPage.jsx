@@ -28,12 +28,12 @@ const LoginPage = () => {
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4">
       <div className="w-full max-w-md rounded-[12px] bg-[var(--color-surface)] p-8 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)] text-center">
         
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-primary-light)]">
-          <GraduationCap size={32} className="text-[var(--color-primary)]" />
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-md">
+          <GraduationCap size={32} className="text-white" />
         </div>
         
-        <h1 className="mb-2 text-2xl font-bold text-[var(--color-text)]">
-          Smart Campus Operations Hub
+        <h1 className="mb-2 text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+          CampusOps
         </h1>
         
         <p className="mb-8 text-[var(--color-text-muted)]">

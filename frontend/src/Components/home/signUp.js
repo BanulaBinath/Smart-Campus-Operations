@@ -64,8 +64,8 @@ function SignUp() {
       <Nav />
       <main className="signup-main" id="about">
         <section className="signup-card">
-          <h1>Create Your Account</h1>
-          <p>Join Smart Campus Operations and start booking facilities in seconds.</p>
+          <h1 style={{ fontWeight: '800', letterSpacing: '-0.02em', color: '#1a56db' }}>Create Your Account</h1>
+          <p>Join CampusOps and start booking facilities in seconds.</p>
 
           {error && <div className="mb-4 text-sm font-medium text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">{error}</div>}
           {success && <div className="mb-4 text-sm font-medium text-green-600 bg-green-50 p-3 rounded-lg border border-green-100">{success}</div>}

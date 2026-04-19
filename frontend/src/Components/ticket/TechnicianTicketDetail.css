@@ -51,8 +51,9 @@
 
 .status-select-group {
     display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
 }
 
 .status-select-group label {
@@ -70,6 +71,12 @@
     color: #163f84;
     background: #f9fbff;
     outline: none;
+}
+
+.status-help {
+    color: #456697;
+    font-weight: 600;
+    font-size: 0.92rem;
 }
 
 .evidence-section,
@@ -137,6 +144,20 @@
     display: flex;
     gap: 0.8rem;
     flex-wrap: wrap;
+}
+
+.resolution-note {
+    width: 100%;
+    border: 1px solid #d9e8ff;
+    border-radius: 18px;
+    padding: 1rem;
+    font-size: 0.96rem;
+    font-family: 'Manrope', sans-serif;
+    color: #163f84;
+    background: #f9fbff;
+    outline: none;
+    resize: vertical;
+    margin: 0 0 1rem;
 }
 
 .tech-chat-input-row input {

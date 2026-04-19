@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import DashboardLayout from './DashboardLayout';
 import './TechnicianTicketDetail.css';
 
 function TechnicianTicketDetail() {
+  const { ticketId } = useParams();
+
+  const ticket = useMemo(() => {
+    const sampleTickets = [
+      { id: 'TCK-1001', title: 'Broken Projector', location: 'Lecture Hall A401' },
+      { id: 'TCK-1005', title: 'AC Not Working', location: 'Computer Lab B202' },
+      { id: 'TCK-1008', title: 'Damaged Chair', location: 'Library 2nd Floor' },
+    ];
+
+    return sampleTickets.find((t) => t.id === ticketId) || sampleTickets[0];
+  }, [ticketId]);
+
   const [status, setStatus] = useState('IN_PROGRESS');
   const [resolutionNote, setResolutionNote] = useState('');
 
@@ -19,17 +31,20 @@ function TechnicianTicketDetail() {
         <div className="technician-detail-card">
           <div className="technician-detail-header">
             <div>
-              <h1>Ticket #TCK-1001</h1>
-              <p>Broken Projector — Lecture Hall A401</p>
+              <h1>TICKET {ticket.id} DETAIL</h1>
+              <p>
+                {ticket.title} — {ticket.location}
+              </p>
             </div>
 
             <div className="status-select-group">
-              <label>Status</label>
+              <label>Status:</label>
               <select value={status} onChange={(e) => setStatus(e.target.value)}>
                 <option value="OPEN">OPEN</option>
                 <option value="IN_PROGRESS">IN_PROGRESS</option>
                 <option value="RESOLVED">RESOLVED</option>
               </select>
+              <span className="status-help">can change status from here</span>
             </div>
           </div>
 
@@ -53,16 +68,9 @@ function TechnicianTicketDetail() {
               </div>
             </div>
 
-            <div className="tech-chat-input-row">
-              <input type="text" placeholder="Type message..." />
-              <button type="button">Send</button>
-            </div>
-          </div>
-
-          <div className="resolution-section">
-            <h3>Resolution Note</h3>
             <textarea
-              rows="5"
+              className="resolution-note"
+              rows="4"
               value={resolutionNote}
               onChange={(e) => setResolutionNote(e.target.value)}
               placeholder="Add resolution note..."
@@ -71,6 +79,11 @@ function TechnicianTicketDetail() {
             <button type="button" className="save-note-btn">
               Save Note
             </button>
+
+            <div className="tech-chat-input-row">
+              <input type="text" placeholder="Type message..." />
+              <button type="button">Send</button>
+            </div>
           </div>
         </div>
       </section>

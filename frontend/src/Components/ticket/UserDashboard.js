@@ -36,7 +36,7 @@ function UserDashboard() {
       <section className="user-dashboard-box">
         <div className="dashboard-top-row">
           <div>
-            <h1>User Ticket Dashboard</h1>
+            <h1>My Tickets</h1>
             <p>View your submitted maintenance tickets and track their current progress.</p>
           </div>
 
@@ -79,7 +79,7 @@ function UserDashboard() {
               </div>
 
               <div className="ticket-card-actions">
-                <Link to="/tickets/chat" className="ticket-action-link">
+                <Link to={`/tickets/chat/${ticket.id}`} className="ticket-action-link">
                   Open Conversation
                 </Link>
               </div>

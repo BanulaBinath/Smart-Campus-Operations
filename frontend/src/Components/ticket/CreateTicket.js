@@ -44,7 +44,7 @@ function CreateTicket() {
     e.preventDefault();
 
     setErrorMessage('');
-    setSuccessMessage('Ticket form submitted successfully.');
+    setSuccessMessage('Ticket submitted successfully.');
 
     console.log('Ticket Data:', formData);
   };
@@ -53,14 +53,14 @@ function CreateTicket() {
     <DashboardLayout role="USER">
       <section className="create-ticket-box">
         <div className="create-ticket-header">
-          <h1>Create Support Ticket</h1>
-          <p>Submit a maintenance issue with all the required details for faster resolution.</p>
+          <h1>Create Ticket</h1>
+          <p>Submit a maintenance issue with the required details for faster resolution.</p>
         </div>
 
         <form className="create-ticket-form" onSubmit={handleSubmit}>
           <div className="form-grid">
             <div className="form-group">
-              <label>Location / Resource</label>
+              <label>Location</label>
               <input
                 type="text"
                 name="location"
@@ -131,7 +131,7 @@ function CreateTicket() {
           </div>
 
           <div className="form-group">
-            <label>Upload Images (Maximum 3)</label>
+            <label>Upload Images</label>
             <input
               type="file"
               name="images"
@@ -145,7 +145,7 @@ function CreateTicket() {
           {successMessage && <p className="form-message success-message">{successMessage}</p>}
 
           <button type="submit" className="submit-ticket-btn">
-            Submit Ticket
+            Submit
           </button>
         </form>
       </section>

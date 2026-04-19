@@ -21,7 +21,7 @@ function TechnicianDashboard() {
         <div className="technician-ticket-grid">
           {assignedTickets.map((ticket) => (
             <Link
-              to="/tickets/technician/detail"
+              to={`/tickets/technician/${ticket.id}`}
               className="technician-ticket-card"
               key={ticket.id}
             >

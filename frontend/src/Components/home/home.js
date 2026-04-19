@@ -39,7 +39,7 @@ function Home() {
 
         <div className="hero-content">
           <p className="hero-tag">Smart Booking. Smooth Campus Life.</p>
-          <h1>Welcome to Smart Campus Operations Hub</h1>
+          <h1 style={{ fontWeight: '900', letterSpacing: '-0.02em', color: '#1a56db' }}>Welcome to CampusOps</h1>
 
           <p>
             Manage bookings for lecture halls, conference halls, sports grounds, and facility items
@@ -57,7 +57,7 @@ function Home() {
         <div className="about-inner">
           <h2>Built for Students, Staff, and Campus Teams</h2>
           <p>
-            Smart Campus Operations helps everyone coordinate spaces and resources with fewer
+            CampusOps helps everyone coordinate spaces and resources with fewer
             conflicts, faster approvals, and a better campus experience.
           </p>
         </div>

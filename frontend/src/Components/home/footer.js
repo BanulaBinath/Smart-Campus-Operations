@@ -6,7 +6,7 @@ function Footer() {
     <footer className="footer" id="contact">
       <div className="footer-grid">
         <div>
-          <h3>Smart Campus Operations</h3>
+          <h3 style={{ fontWeight: '800', letterSpacing: '-0.02em', color: '#fff' }}>CampusOps</h3>
           <p>
             A student-friendly platform to simplify facility scheduling, bookings, and campus activity planning.
           </p>
@@ -31,7 +31,7 @@ function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p>Copyright 2026 Smart Campus Operations. All rights reserved.</p>
+        <p>Copyright &copy; {new Date().getFullYear()} CampusOps. All rights reserved.</p>
       </div>
     </footer>
   );

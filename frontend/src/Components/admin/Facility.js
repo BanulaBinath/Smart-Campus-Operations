@@ -234,58 +234,57 @@ function Facility() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
-                  {facilities.length > 0 ? (
-                    facilities.map((facility) => (
-                      <tr key={facility.id} className="hover:bg-[#F8FAFC] transition-colors">
-                        <td className="px-6 py-4 font-medium">{facility.id}</td>
-                        <td className="px-6 py-4">{facility.name}</td>
-                        <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                            {facility.type}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">{facility.category}</td>
-                        <td className="px-6 py-4">{facility.type === 'GROUND' ? '-' : facility.capacity}</td>
-                        <td className="px-6 py-4">{facility.roomNumber || '-'}</td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${
-                            facility.status === 'ACTIVE' ? 'bg-green-50 text-green-700 border-green-200' : 
-                            facility.status === 'MAINTENANCE' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : 
+              {facilities.length > 0 ? (
+                facilities.map((facility) => (
+                  <tr key={facility.id} className="hover:bg-[#F8FAFC] transition-colors">
+                    <td className="px-6 py-4 font-medium">{facility.id}</td>
+                    <td className="px-6 py-4">{facility.name}</td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                        {facility.type}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">{facility.category}</td>
+                    <td className="px-6 py-4">{facility.type === 'GROUND' ? '-' : facility.capacity}</td>
+                    <td className="px-6 py-4">{facility.roomNumber || '-'}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${facility.status === 'ACTIVE' ? 'bg-green-50 text-green-700 border-green-200' :
+                          facility.status === 'MAINTENANCE' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
                             'bg-gray-50 text-gray-700 border-gray-200'
-                          }`}>
-                            {facility.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 max-w-[200px] truncate" title={facility.description}>{facility.description}</td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => handleEditClick(facility)}
-                              className="rounded-[8px] border border-[var(--color-border)] bg-white px-3 py-1.5 text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary-light)] flex items-center gap-1.5"
-                            >
-                              <Edit size={14} /> Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(facility.id)}
-                              className="rounded-[8px] border border-[var(--color-border)] bg-white p-1.5 text-[var(--color-danger)] transition-colors hover:bg-red-50 hover:border-red-200"
-                              title="Delete Facility"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="9" className="px-6 py-8 text-center text-[var(--color-text-muted)]">
-                        No facilities found matching your criteria.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                        }`}>
+                        {facility.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 max-w-[200px] truncate" title={facility.description}>{facility.description}</td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => handleEditClick(facility)}
+                          className="rounded-[8px] border border-[var(--color-border)] bg-white px-3 py-1.5 text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary-light)] flex items-center gap-1.5"
+                        >
+                          <Edit size={14} /> Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(facility.id)}
+                          className="rounded-[8px] border border-[var(--color-border)] bg-white p-1.5 text-[var(--color-danger)] transition-colors hover:bg-red-50 hover:border-red-200"
+                          title="Delete Facility"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9" className="px-6 py-8 text-center text-[var(--color-text-muted)]">
+                    No facilities found matching your criteria.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {editingFacility && (
@@ -352,18 +351,17 @@ function Facility() {
                     <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Status</label>
                     <div className="grid grid-cols-3 gap-2">
                       {STATUS_OPTIONS.map((status) => (
-                        <label 
-                          key={status} 
-                          className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 transition-all ${
-                            editForm.status === status 
-                              ? 'border-[var(--color-primary)] bg-[var(--color-primary-light)]/20 text-[var(--color-primary-text)] font-medium' 
+                        <label
+                          key={status}
+                          className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 transition-all ${editForm.status === status
+                              ? 'border-[var(--color-primary)] bg-[var(--color-primary-light)]/20 text-[var(--color-primary-text)] font-medium'
                               : 'border-[var(--color-border)] hover:bg-[var(--color-bg)] grayscale'
-                          }`}
+                            }`}
                         >
-                          <input 
-                            type="radio" 
-                            name="status" 
-                            value={status} 
+                          <input
+                            type="radio"
+                            name="status"
+                            value={status}
                             checked={editForm.status === status}
                             onChange={handleEditChange}
                             className="hidden"

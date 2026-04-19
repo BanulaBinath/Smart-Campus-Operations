@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import DashboardLayout from './DashboardLayout';
 import './CreateTicket.css';
 
+const API_BASE_URL = 'http://localhost:8080/api/tickets';
+
 function CreateTicket() {
   const [formData, setFormData] = useState({
     location: '',
@@ -14,6 +16,7 @@ function CreateTicket() {
 
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -40,13 +43,73 @@ function CreateTicket() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const uploadAttachments = async (ticketId, images) => {
+    for (const image of images) {
+      const fileData = new FormData();
+      fileData.append('file', image);
+
+      const response = await fetch(`${API_BASE_URL}/${ticketId}/attachments`, {
+        method: 'POST',
+        body: fileData
+      });
+
+      if (!response.ok) {
+        throw new Error('Ticket created, but image upload failed.');
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setErrorMessage('');
-    setSuccessMessage('Ticket submitted successfully.');
+    setSuccessMessage('');
+    setIsSubmitting(true);
 
-    console.log('Ticket Data:', formData);
+    try {
+      const ticketPayload = {
+        title: formData.category || 'Maintenance Issue',
+        location: formData.location,
+        category: formData.category,
+        description: formData.description,
+        priority: formData.priority,
+        contactDetails: formData.contactDetails,
+        createdBy: 'user@example.com'
+      };
+
+      const ticketResponse = await fetch(API_BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ticketPayload)
+      });
+
+      if (!ticketResponse.ok) {
+        const errorData = await ticketResponse.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to create ticket.');
+      }
+
+      const createdTicket = await ticketResponse.json();
+
+      if (formData.images.length > 0) {
+        await uploadAttachments(createdTicket.id, formData.images);
+      }
+
+      setSuccessMessage('Ticket submitted successfully.');
+      setFormData({
+        location: '',
+        category: '',
+        description: '',
+        priority: '',
+        contactDetails: '',
+        images: []
+      });
+    } catch (error) {
+      setErrorMessage(error.message || 'Something went wrong while submitting the ticket.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -144,8 +207,8 @@ function CreateTicket() {
           {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
           {successMessage && <p className="form-message success-message">{successMessage}</p>}
 
-          <button type="submit" className="submit-ticket-btn">
-            Submit
+          <button type="submit" className="submit-ticket-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </form>
       </section>

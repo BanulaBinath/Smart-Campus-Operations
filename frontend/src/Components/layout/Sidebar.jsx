@@ -18,11 +18,17 @@ const Sidebar = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Facilities', path: '/facilities', icon: Building2 }, // Module A stub
+  ];
+
+  if (user?.role === 'ADMIN' || user?.role === 'TECHNICIAN') {
+    navItems.push({ name: 'Facilities', path: '/facilities', icon: Building2 });
+  }
+
+  navItems.push(
     { name: 'Bookings', path: '/bookings', icon: CalendarCheck }, // Module B stub
     { name: 'Incidents', path: '/incidents', icon: AlertTriangle }, // Module C stub
-    { name: 'Notifications', path: '/notifications', icon: Bell },
-  ];
+    { name: 'Notifications', path: '/notifications', icon: Bell }
+  );
 
   if (user?.role === 'ADMIN') {
     navItems.push({ name: 'Users', path: '/admin/users', icon: Users });

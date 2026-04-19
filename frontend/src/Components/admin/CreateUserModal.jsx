@@ -17,7 +17,7 @@ const CreateUserModal = ({ onClose, onSave }) => {
   const [error, setError] = useState('');
 
   const roles = [
-    { id: 'USER', label: 'User' },
+    { id: 'USER', label: 'Student' },
     { id: 'LECTURER', label: 'Lecturer' },
     { id: 'TECHNICIAN', label: 'Technician' },
     { id: 'ADMIN', label: 'Administrator' }

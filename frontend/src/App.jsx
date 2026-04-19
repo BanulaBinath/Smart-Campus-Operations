@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage';
 import UserManagementPage from './pages/admin/UserManagementPage';
 import NotFoundPage from './pages/NotFoundPage';
 import FacilitiesPage from './pages/admin/FacilitiesPage';
+import StudentFacilitiesPage from './pages/student/StudentFacilitiesPage';
 
 // Original Components
 import Home from './components/home/home';
@@ -50,6 +51,11 @@ function App() {
         {/* Admin and Technician Routes */}
         <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'TECHNICIAN']} />}>
           <Route path="/facilities" element={<FacilitiesPage />} />
+        </Route>
+
+        {/* Student Routes */}
+        <Route element={<ProtectedRoute allowedRoles={['STUDENT', 'USER', 'LECTURER']} />}>
+          <Route path="/student/facilities" element={<StudentFacilitiesPage />} />
         </Route>
 
         {/* Admin Only Routes */}

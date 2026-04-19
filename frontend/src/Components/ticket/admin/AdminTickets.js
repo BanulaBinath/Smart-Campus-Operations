@@ -1,45 +1,40 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../DashboardLayout';
 import './AdminTickets.css';
 
+const API_BASE_URL = 'http://localhost:8080/api/tickets';
+
 function AdminTickets() {
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const tickets = [
-    {
-      id: 1,
-      title: 'Broken Projector',
-      location: 'A401',
-      priority: 'High',
-      status: 'OPEN',
-      assignedTo: 'Not Assigned',
-    },
-    {
-      id: 2,
-      title: 'AC Not Working',
-      location: 'B203',
-      priority: 'Low',
-      status: 'IN_PROGRESS',
-      assignedTo: 'Nimal',
-    },
-    {
-      id: 3,
-      title: 'Damaged Chair',
-      location: 'C110',
-      priority: 'Medium',
-      status: 'RESOLVED',
-      assignedTo: 'Kasun',
-    },
-    {
-      id: 4,
-      title: 'Lab PC Not Booting',
-      location: 'Lab 2',
-      priority: 'High',
-      status: 'REJECTED',
-      assignedTo: 'Not Assigned',
-    },
-  ];
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        setLoading(true);
+        setErrorMessage('');
+
+        const response = await fetch(API_BASE_URL);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to load tickets.');
+        }
+
+        const data = await response.json();
+        setTickets(data);
+      } catch (error) {
+        setErrorMessage(error.message || 'Something went wrong while loading tickets.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTickets();
+  }, []);
 
   const filteredTickets = useMemo(() => {
     if (statusFilter === 'ALL') return tickets;
@@ -67,59 +62,65 @@ function AdminTickets() {
               <option value="IN_PROGRESS">In Progress</option>
               <option value="RESOLVED">Resolved</option>
               <option value="REJECTED">Rejected</option>
+              <option value="CLOSED">Closed</option>
             </select>
           </div>
         </div>
 
-        <div className="admin-tickets-table-wrapper">
-          <table className="admin-tickets-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Location</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Assigned To</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTickets.map((ticket) => (
-                <tr key={ticket.id}>
-                  <td>#{ticket.id}</td>
-                  <td>{ticket.title}</td>
-                  <td>{ticket.location}</td>
-                  <td>
-                    <span className={`priority-badge ${ticket.priority.toLowerCase()}`}>
-                      {ticket.priority}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${ticket.status.toLowerCase()}`}>
-                      {ticket.status.replace('_', ' ')}
-                    </span>
-                  </td>
-                  <td>{ticket.assignedTo}</td>
-                  <td>
-                    <Link
-                      to={`/admin/tickets/${ticket.id}`}
-                      className="admin-open-btn"
-                    >
-                      Open
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {loading && <p>Loading tickets...</p>}
+        {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
 
-          {filteredTickets.length === 0 && (
-            <div className="admin-no-tickets">
-              <p>No tickets found for this filter.</p>
-            </div>
-          )}
-        </div>
+        {!loading && !errorMessage && (
+          <div className="admin-tickets-table-wrapper">
+            <table className="admin-tickets-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Location</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Assigned To</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTickets.map((ticket) => (
+                  <tr key={ticket.id}>
+                    <td>#{ticket.id}</td>
+                    <td>{ticket.title || ticket.category || 'Maintenance Ticket'}</td>
+                    <td>{ticket.location}</td>
+                    <td>
+                      <span className={`priority-badge ${ticket.priority.toLowerCase()}`}>
+                        {ticket.priority}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`status-badge ${ticket.status.toLowerCase()}`}>
+                        {ticket.status.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td>{ticket.assignedTo || 'Not Assigned'}</td>
+                    <td>
+                      <Link
+                        to={`/admin/tickets/${ticket.id}`}
+                        className="admin-open-btn"
+                      >
+                        Open
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {filteredTickets.length === 0 && (
+              <div className="admin-no-tickets">
+                <p>No tickets found for this filter.</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

@@ -1,107 +1,151 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import DashboardLayout from './DashboardLayout';
 import './TicketChat.css';
 
+const API_BASE_URL = 'http://localhost:8080/api/tickets';
+const CURRENT_USER = 'user@example.com';
+
 function TicketChat({ role = 'USER' }) {
   const { ticketId } = useParams();
 
-  const ticketData = {
-    'TCK-1001': {
-      id: 'TCK-1001',
-      location: 'Lecture Hall A401',
-      issue: 'Projector Issue',
-      status: 'OPEN',
-      messages: [
-        {
-          id: 1,
-          sender: 'user',
-          senderName: 'You',
-          text: 'The projector in Lecture Hall A401 is not turning on.',
-          time: '09:20 AM',
-        },
-        {
-          id: 2,
-          sender: 'staff',
-          senderName: 'Technician Ryan',
-          text: 'Received the issue. I will inspect it shortly.',
-          time: '09:35 AM',
-        },
-        {
-          id: 3,
-          sender: 'user',
-          senderName: 'You',
-          text: 'Thank you. Please let me know once it is checked.',
-          time: '09:42 AM',
-        },
-      ],
-    },
-    'TCK-1002': {
-      id: 'TCK-1002',
-      location: 'Lab 03',
-      issue: 'PC Not Booting',
-      status: 'IN_PROGRESS',
-      messages: [
-        {
-          id: 1,
-          sender: 'user',
-          senderName: 'You',
-          text: 'One of the lab computers is not starting.',
-          time: '10:10 AM',
-        },
-        {
-          id: 2,
-          sender: 'staff',
-          senderName: 'Technician Amila',
-          text: 'I am checking the power supply and RAM.',
-          time: '10:25 AM',
-        },
-      ],
-    },
-  };
-
-  const selectedTicket = ticketId ? ticketData[ticketId] : null;
-
-  const [messages, setMessages] = useState(selectedTicket ? selectedTicket.messages : []);
+  const [ticket, setTicket] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [editingId, setEditingId] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const handleSend = () => {
-    if (!newMessage.trim() || !selectedTicket) return;
+  useEffect(() => {
+    const fetchTicketData = async () => {
+      try {
+        setLoading(true);
+        setErrorMessage('');
 
-    if (editingId) {
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === editingId ? { ...msg, text: newMessage } : msg
-        )
-      );
-      setEditingId(null);
-      setNewMessage('');
-      return;
-    }
+        const ticketResponse = await fetch(`${API_BASE_URL}/${ticketId}`);
+        if (!ticketResponse.ok) {
+          const errorData = await ticketResponse.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to load ticket.');
+        }
 
-    const newMsg = {
-      id: Date.now(),
-      sender: 'user',
-      senderName: 'You',
-      text: newMessage,
-      time: 'Now',
+        const ticketData = await ticketResponse.json();
+        setTicket(ticketData);
+
+        const commentsResponse = await fetch(`${API_BASE_URL}/${ticketId}/comments`);
+        if (!commentsResponse.ok) {
+          const errorData = await commentsResponse.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to load comments.');
+        }
+
+        const commentsData = await commentsResponse.json();
+        setMessages(commentsData);
+      } catch (error) {
+        setErrorMessage(error.message || 'Something went wrong while loading the ticket.');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    setMessages((prev) => [...prev, newMsg]);
-    setNewMessage('');
+    if (ticketId) {
+      fetchTicketData();
+    }
+  }, [ticketId]);
+
+  const handleSend = async () => {
+    if (!newMessage.trim() || !ticket) return;
+
+    try {
+      setErrorMessage('');
+
+      if (editingId) {
+        const response = await fetch(`${API_BASE_URL}/comments/${editingId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: newMessage,
+            requestedBy: CURRENT_USER
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to update comment.');
+        }
+
+        const updatedComment = await response.json();
+        setMessages((prev) =>
+          prev.map((msg) => (msg.id === editingId ? updatedComment : msg))
+        );
+        setEditingId(null);
+        setNewMessage('');
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/${ticketId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: newMessage,
+          createdBy: CURRENT_USER,
+          createdByRole: role
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to add comment.');
+      }
+
+      const createdComment = await response.json();
+      setMessages((prev) => [...prev, createdComment]);
+      setNewMessage('');
+    } catch (error) {
+      setErrorMessage(error.message || 'Something went wrong while sending the message.');
+    }
   };
 
   const handleEdit = (message) => {
     setEditingId(message.id);
-    setNewMessage(message.text);
+    setNewMessage(message.message);
   };
 
-  const handleDelete = (id) => {
-    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      setErrorMessage('');
+
+      const response = await fetch(
+        `${API_BASE_URL}/comments/${id}?requestedBy=${encodeURIComponent(CURRENT_USER)}`,
+        {
+          method: 'DELETE'
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to delete comment.');
+      }
+
+      setMessages((prev) => prev.filter((msg) => msg.id !== id));
+    } catch (error) {
+      setErrorMessage(error.message || 'Something went wrong while deleting the message.');
+    }
   };
 
-  if (!selectedTicket) {
+  if (loading) {
+    return (
+      <DashboardLayout role={role}>
+        <section className="ticket-chat-page">
+          <p>Loading ticket...</p>
+        </section>
+      </DashboardLayout>
+    );
+  }
+
+  if (!ticket) {
     return (
       <DashboardLayout role={role}>
         <section className="ticket-chat-page">
@@ -121,36 +165,35 @@ function TicketChat({ role = 'USER' }) {
           <div>
             <h1>Ticket Chat</h1>
             <p>
-              Ticket ID: {selectedTicket.id} | {selectedTicket.location} |{' '}
-              {selectedTicket.issue}
+              Ticket ID: {ticket.id} | {ticket.location} | {ticket.category}
             </p>
           </div>
 
-          <span className="chat-status-badge">{selectedTicket.status}</span>
+          <span className="chat-status-badge">{ticket.status}</span>
         </div>
+
+        {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
 
         <div className="chat-box">
           <div className="chat-messages">
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`chat-bubble-row ${
-                  message.sender === 'user' ? 'own-row' : 'other-row'
-                }`}
+                className={`chat-bubble-row ${message.createdBy === CURRENT_USER ? 'own-row' : 'other-row'}`}
               >
                 <div
-                  className={`chat-bubble ${
-                    message.sender === 'user' ? 'own-bubble' : 'other-bubble'
-                  }`}
+                  className={`chat-bubble ${message.createdBy === CURRENT_USER ? 'own-bubble' : 'other-bubble'}`}
                 >
                   <div className="chat-bubble-top">
-                    <span className="chat-sender">{message.senderName}</span>
-                    <span className="chat-time">{message.time}</span>
+                    <span className="chat-sender">{message.createdBy || 'User'}</span>
+                    <span className="chat-time">
+                      {message.createdAt ? new Date(message.createdAt).toLocaleString() : ''}
+                    </span>
                   </div>
 
-                  <p>{message.text}</p>
+                  <p>{message.message}</p>
 
-                  {message.sender === 'user' && (
+                  {message.createdBy === CURRENT_USER && (
                     <div className="chat-actions">
                       <button type="button" onClick={() => handleEdit(message)}>
                         Edit

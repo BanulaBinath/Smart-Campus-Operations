@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCheck } from 'lucide-react';
+import { CheckCheck, Send } from 'lucide-react';
 import TopBar from '../components/layout/TopBar';
 import Sidebar from '../components/layout/Sidebar';
 import NotificationItem from '../components/notifications/NotificationItem';
 import { notificationApi } from '../api/notificationApi';
+import { useAuth } from '../context/AuthContext';
 
 const NotificationsPage = () => {
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('ALL'); // ALL, UNREAD, BOOKINGS, TICKETS
+
+  // Custom Notification Modal State
+  const [showCustomModal, setShowCustomModal] = useState(false);
+  const [customData, setCustomData] = useState({ title: '', message: '', targetRoles: [] });
+  const [sendingCustom, setSendingCustom] = useState(false);
 
   const fetchNotifications = async () => {
     try {
@@ -54,6 +61,31 @@ const NotificationsPage = () => {
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
+  const handleSendCustom = async (e) => {
+    e.preventDefault();
+    if (!customData.title || !customData.message || customData.targetRoles.length === 0) return;
+    setSendingCustom(true);
+    try {
+      await notificationApi.sendCustomNotification(customData);
+      setShowCustomModal(false);
+      setCustomData({ title: '', message: '', targetRoles: [] });
+      fetchNotifications();
+    } catch (error) {
+      console.error('Failed to send custom notification', error);
+    } finally {
+      setSendingCustom(false);
+    }
+  };
+
+  const handleRoleToggle = (role) => {
+    setCustomData(prev => ({
+      ...prev,
+      targetRoles: prev.targetRoles.includes(role) 
+        ? prev.targetRoles.filter(r => r !== role)
+        : [...prev.targetRoles, role]
+    }));
+  };
+
   return (
     <div className="flex h-screen bg-[#f8fafc] text-gray-900">
       <Sidebar />
@@ -87,15 +119,27 @@ const NotificationsPage = () => {
                 ))}
               </div>
 
-              {unreadCount > 0 && (
-                <button
-                  onClick={handleMarkAllRead}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-white/80 backdrop-blur-md border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-white hover:shadow-md shrink-0"
-                >
-                  <CheckCheck size={18} className="text-blue-600" />
-                  Mark all as read
-                </button>
-              )}
+              <div className="flex items-center justify-end gap-2 shrink-0">
+                {unreadCount > 0 && (
+                  <button
+                    onClick={handleMarkAllRead}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-white/80 backdrop-blur-md border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-white hover:shadow-md shrink-0"
+                  >
+                    <CheckCheck size={18} className="text-blue-600" />
+                    Mark all as read
+                  </button>
+                )}
+
+                {user?.role === 'ADMIN' && (
+                  <button
+                    onClick={() => setShowCustomModal(true)}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 border border-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-blue-700 shadow-md shadow-blue-500/20 shrink-0"
+                  >
+                    <Send size={18} className="text-white" />
+                    Custom Notification
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* List Area */}
@@ -130,6 +174,71 @@ const NotificationsPage = () => {
           </div>
         </main>
       </div>
+
+      {/* Admin Custom Notification Modal */}
+      {showCustomModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+            <h2 className="mb-4 text-xl font-bold text-gray-900">Send Custom Notification</h2>
+            <form onSubmit={handleSendCustom}>
+              <div className="mb-4">
+                <label className="mb-1 block text-sm font-semibold text-gray-700">Title</label>
+                <input 
+                  type="text" 
+                  value={customData.title}
+                  onChange={(e) => setCustomData({...customData, title: e.target.value})}
+                  className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-blue-500 focus:outline-none"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="mb-1 block text-sm font-semibold text-gray-700">Message</label>
+                <textarea 
+                  value={customData.message}
+                  onChange={(e) => setCustomData({...customData, message: e.target.value})}
+                  rows={3}
+                  className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-blue-500 focus:outline-none"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label className="mb-2 block text-sm font-semibold text-gray-700">Target Roles</label>
+                <div className="flex flex-wrap gap-2">
+                  {['STUDENT', 'LECTURER', 'TECHNICIAN'].map(role => {
+                    const isSelected = customData.targetRoles.includes(role);
+                    return (
+                      <button
+                        key={role}
+                        type="button"
+                        onClick={() => handleRoleToggle(role)}
+                        className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${isSelected ? 'bg-blue-50 border-blue-600 text-blue-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'}`}
+                      >
+                        {role}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowCustomModal(false)}
+                  className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={sendingCustom || customData.targetRoles.length === 0}
+                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {sendingCustom ? 'Sending...' : 'Send'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

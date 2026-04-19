@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.smart_campus_operations.entity.Role;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,6 +38,21 @@ public class NotificationService {
                 .build();
 
         notificationRepository.save(notification);
+    }
+
+    @Transactional
+    public void sendNotificationToRole(Role role, NotificationType type, String message, UUID referenceId, String referenceType) {
+        List<AppUser> users = userRepository.findAllByRole(role);
+        for (AppUser recipient : users) {
+             Notification notification = Notification.builder()
+                .recipient(recipient)
+                .type(type)
+                .message(message)
+                .referenceId(referenceId)
+                .referenceType(referenceType)
+                .build();
+             notificationRepository.save(notification);
+        }
     }
 
     public List<NotificationResponse> getNotificationsForUser(UUID userId) {

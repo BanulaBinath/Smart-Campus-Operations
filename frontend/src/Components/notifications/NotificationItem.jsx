@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { CheckCircle, XCircle, MinusCircle, AlertCircle, MessageSquare, UserCheck, Trash2 } from 'lucide-react';
+import { CheckCircle, XCircle, MinusCircle, AlertCircle, MessageSquare, UserCheck, Trash2, Megaphone, Building, Building2 } from 'lucide-react';
 import { notificationApi } from '../../api/notificationApi';
 
 /**
@@ -27,6 +27,12 @@ const NotificationItem = ({ notification, inDropdown = false, onMarkRead, onDele
         return { Icon: MessageSquare, color: 'var(--color-primary)' };
       case 'TICKET_ASSIGNED':
         return { Icon: UserCheck, color: 'var(--color-warning)' };
+      case 'FACILITY_ADDED':
+        return { Icon: Building, color: 'var(--color-success)' };
+      case 'FACILITY_DELETED':
+        return { Icon: Building2, color: 'var(--color-danger)' };
+      case 'CUSTOM_NOTIFICATION':
+        return { Icon: Megaphone, color: 'var(--color-primary)' };
       default:
         return { Icon: AlertCircle, color: 'var(--color-text-muted)' };
     }

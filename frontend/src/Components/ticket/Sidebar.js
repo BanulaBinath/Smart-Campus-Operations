@@ -5,14 +5,11 @@ import './Sidebar.css';
 function Sidebar({ role }) {
   const menus = {
     USER: [
-      { to: '/tickets', label: 'Dashboard' },
+      { to: '/tickets', label: 'My Tickets' },
       { to: '/tickets/create', label: 'Create Ticket' },
-      { to: '/tickets/chat', label: 'Comments' },
     ],
     TECHNICIAN: [
-      { to: '/technician', label: 'Dashboard' },
-      { to: '/technician/tickets', label: 'My Tickets' },
-      { to: '/technician/chat', label: 'Comments' },
+      { to: '/tickets/technician', label: 'My Tickets' },
     ],
     ADMIN: [
       { to: '/admin', label: 'Stats' },

@@ -22,10 +22,12 @@ function App() {
       <Route path="/tickets" element={<UserDashboard />} />
       <Route path="/tickets/create" element={<CreateTicket />} />
       <Route path="/tickets/chat" element={<TicketChat role="USER" />} />
+      <Route path="/tickets/chat/:ticketId" element={<TicketChat role="USER" />} />
       <Route path="/technician/chat" element={<TicketChat role="TECHNICIAN" />} />
       <Route path="/admin/chat" element={<TicketChat role="ADMIN" />} />
       <Route path="/tickets/technician" element={<TechnicianDashboard />} />
       <Route path="/tickets/technician/detail" element={<TechnicianTicketDetail />} />
+      <Route path="/tickets/technician/:ticketId" element={<TechnicianTicketDetail />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/tickets" element={<AdminTickets />} />
       <Route path="/admin/tickets/:id" element={<AdminTicketDetail />} />

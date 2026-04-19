@@ -1,0 +1,217 @@
+.technician-detail-page {
+    min-height: 520px;
+    padding: 0.3rem 0;
+}
+
+.technician-detail-top {
+    margin-bottom: 1rem;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #0c4db1;
+    font-weight: 700;
+    padding: 0.55rem 0.9rem;
+    border-radius: 12px;
+    transition: background-color 220ms ease, color 220ms ease;
+}
+
+.back-link:hover {
+    background: #e8f2ff;
+    color: #093f95;
+}
+
+.technician-detail-card {
+    background: #ffffff;
+    border: 1px solid #deebff;
+    border-radius: 24px;
+    box-shadow: 0 12px 28px rgba(30, 84, 167, 0.1);
+    padding: 1.5rem;
+}
+
+.technician-detail-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.technician-detail-header h1 {
+    margin: 0;
+    color: #0c3a89;
+    font-size: 1.9rem;
+}
+
+.technician-detail-header p {
+    margin-top: 0.6rem;
+    color: #456697;
+    line-height: 1.6;
+}
+
+.status-select-group {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.status-select-group label {
+    color: #123d82;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.status-select-group select {
+    border: 1px solid #d9e8ff;
+    border-radius: 16px;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    font-family: 'Manrope', sans-serif;
+    color: #163f84;
+    background: #f9fbff;
+    outline: none;
+}
+
+.status-help {
+    color: #456697;
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+
+.evidence-section,
+.tech-chat-section,
+.resolution-section {
+    margin-top: 1.6rem;
+}
+
+.evidence-section h3,
+.tech-chat-section h3,
+.resolution-section h3 {
+    margin: 0 0 0.9rem;
+    color: #0c3a89;
+}
+
+.evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.evidence-box {
+    background: #f4f8ff;
+    border: 1px dashed #b8d2ff;
+    border-radius: 18px;
+    min-height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5b7db1;
+    font-weight: 700;
+}
+
+.tech-chat-box {
+    background: #f9fbff;
+    border: 1px solid #e1edff;
+    border-radius: 18px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.tech-chat-message {
+    max-width: 75%;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    line-height: 1.6;
+}
+
+.user-msg {
+    background: #eef5ff;
+    color: #163f84;
+    align-self: flex-start;
+}
+
+.tech-msg {
+    background: linear-gradient(135deg, #0d5dd8 0%, #2b86ff 100%);
+    color: #ffffff;
+    align-self: flex-end;
+}
+
+.tech-chat-input-row {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.resolution-note {
+    width: 100%;
+    border: 1px solid #d9e8ff;
+    border-radius: 18px;
+    padding: 1rem;
+    font-size: 0.96rem;
+    font-family: 'Manrope', sans-serif;
+    color: #163f84;
+    background: #f9fbff;
+    outline: none;
+    resize: vertical;
+    margin: 0 0 1rem;
+}
+
+.tech-chat-input-row input {
+    flex: 1;
+    min-width: 220px;
+    border: 1px solid #d9e8ff;
+    border-radius: 16px;
+    padding: 0.9rem 1rem;
+    font-size: 0.96rem;
+    font-family: 'Manrope', sans-serif;
+    color: #163f84;
+    background: #f9fbff;
+    outline: none;
+}
+
+.tech-chat-input-row button,
+.save-note-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 0.85rem 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: #1144ba;
+    box-shadow: 0 12px 22px rgba(10, 45, 133, 0.3);
+    cursor: pointer;
+    transition: transform 220ms ease, background-color 220ms ease;
+}
+
+.tech-chat-input-row button:hover,
+.save-note-btn:hover {
+    transform: translateY(-2px);
+    background: #0c3b9f;
+}
+
+.resolution-section textarea {
+    width: 100%;
+    border: 1px solid #d9e8ff;
+    border-radius: 18px;
+    padding: 1rem;
+    font-size: 0.96rem;
+    font-family: 'Manrope', sans-serif;
+    color: #163f84;
+    background: #f9fbff;
+    outline: none;
+    resize: vertical;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 900px) {
+    .evidence-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tech-chat-message {
+        max-width: 100%;
+    }
+}

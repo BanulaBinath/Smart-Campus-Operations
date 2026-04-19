@@ -1,0 +1,115 @@
+.create-ticket-box {
+    min-height: 520px;
+    background: transparent;
+    border-radius: 24px;
+    padding: 0.3rem 0;
+}
+
+.create-ticket-header {
+    margin-bottom: 1.5rem;
+}
+
+.create-ticket-header h1 {
+    margin: 0;
+    color: #0c3a89;
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.create-ticket-header p {
+    margin-top: 0.75rem;
+    color: #456697;
+    line-height: 1.7;
+    max-width: 760px;
+}
+
+.create-ticket-form {
+    background: #ffffff;
+    border: 1px solid #deebff;
+    border-radius: 24px;
+    box-shadow: 0 12px 28px rgba(30, 84, 167, 0.1);
+    padding: 1.6rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    color: #123d82;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border: 1px solid #d9e8ff;
+    border-radius: 16px;
+    padding: 0.9rem 1rem;
+    font-size: 0.96rem;
+    font-family: 'Manrope', sans-serif;
+    color: #163f84;
+    background: #f9fbff;
+    outline: none;
+    transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #0f53be;
+    box-shadow: 0 0 0 4px rgba(15, 83, 190, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-message {
+    margin: 0 0 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.error-message {
+    color: #c0392b;
+}
+
+.success-message {
+    color: #1d7a42;
+}
+
+.submit-ticket-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 0.85rem 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #ffffff;
+    background: #1144ba;
+    box-shadow: 0 12px 22px rgba(10, 45, 133, 0.3);
+    transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+    cursor: pointer;
+}
+
+.submit-ticket-btn:hover {
+    transform: translateY(-2px);
+    background: #0c3b9f;
+}
+
+@media (max-width: 900px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

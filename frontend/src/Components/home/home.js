@@ -30,13 +30,6 @@ function Home() {
 
       <section className="hero" id="home">
 
-        {/* Admin Button (FIXED - visible now) */}
-        <div className="admin-btn-wrapper">
-          <Link to="/admin">
-            <button className="asd">Admin</button>
-          </Link>
-        </div>
-
         <div className="hero-content">
           <p className="hero-tag">Smart Booking. Smooth Campus Life.</p>
           <h1 style={{ fontWeight: '900', letterSpacing: '-0.02em', color: '#1a56db' }}>Welcome to CampusOps</h1>
@@ -76,10 +69,6 @@ function Home() {
               <p>{feature.text}</p>
             </article>
           ))}
-        </div>
-
-        <div className="cta-wrap">
-          <a href="#facilities" className="btn btn-primary">View Facilities</a>
         </div>
       </section>
 

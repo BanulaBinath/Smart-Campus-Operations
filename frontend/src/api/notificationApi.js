@@ -24,5 +24,10 @@ export const notificationApi = {
   deleteNotification: async (id) => {
     const response = await api.delete(`/notifications/${id}`);
     return response.data;
+  },
+
+  sendCustomNotification: async (data) => {
+    const response = await api.post('/notifications/custom', data);
+    return response.data;
   }
 };

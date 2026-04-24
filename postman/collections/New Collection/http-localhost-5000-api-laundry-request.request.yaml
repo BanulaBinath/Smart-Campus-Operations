@@ -1,0 +1,12 @@
+$kind: http-request
+name: "http://localhost:5000/api/laundry/request "
+url: "http://localhost:5000/api/laundry/request "
+method: POST
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWU4YjljODg2Njc3MzI3YWI5MDVjOGMiLCJlbWFpbCI6ImpleWFzYXRoZWVzaHNpZGQyMDhAZ21haWwuY29tIiwicm9sZSI6InN0dWRlbnRfZXh0ZXJuYWwiLCJ2ZW5kb3JUeXBlIjpudWxsLCJpYXQiOjE3NzY5MjQ1NDIsImV4cCI6MTc3NzUyOTM0Mn0.pAu_y3gbfkqn4Zr7tehxqW_thRdWPvMbMBfNN5UUM7s
+order: 1776930173209

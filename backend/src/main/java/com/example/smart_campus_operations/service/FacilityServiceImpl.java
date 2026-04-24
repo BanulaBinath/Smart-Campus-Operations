@@ -3,6 +3,8 @@ package com.example.smart_campus_operations.service;
 import com.example.smart_campus_operations.dto.*;
 import com.example.smart_campus_operations.model.Facility;
 import com.example.smart_campus_operations.repo.FacilityRepository;
+import com.example.smart_campus_operations.entity.NotificationType;
+import com.example.smart_campus_operations.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Autowired
     private FacilityRepository repository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     private FacilityResponseDTO mapToDTO(Facility f) {
         return new FacilityResponseDTO(
@@ -42,7 +47,17 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Override
     public FacilityResponseDTO create(FacilityRequestDTO dto) {
-        return mapToDTO(repository.save(mapToEntity(dto)));
+        Facility f = repository.save(mapToEntity(dto));
+        
+        String msg = "New facility added: " + f.getName();
+        notificationService.sendNotificationToRole(Role.LECTURER, NotificationType.FACILITY_ADDED, msg, null, "FACILITY");
+        
+        if (!"Classroom".equalsIgnoreCase(f.getType()) && !"Lab".equalsIgnoreCase(f.getType())) {
+            notificationService.sendNotificationToRole(Role.STUDENT, NotificationType.FACILITY_ADDED, msg, null, "FACILITY");
+            notificationService.sendNotificationToRole(Role.USER, NotificationType.FACILITY_ADDED, msg, null, "FACILITY");
+        }
+        
+        return mapToDTO(f);
     }
 
     @Override
@@ -78,6 +93,17 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        Facility f = repository.findById(id).orElse(null);
+        if (f != null) {
+            repository.deleteById(id);
+            
+            String msg = "Facility deleted: " + f.getName();
+            notificationService.sendNotificationToRole(Role.LECTURER, NotificationType.FACILITY_DELETED, msg, null, "FACILITY");
+            
+            if (!"Classroom".equalsIgnoreCase(f.getType()) && !"Lab".equalsIgnoreCase(f.getType())) {
+                notificationService.sendNotificationToRole(Role.STUDENT, NotificationType.FACILITY_DELETED, msg, null, "FACILITY");
+                notificationService.sendNotificationToRole(Role.USER, NotificationType.FACILITY_DELETED, msg, null, "FACILITY");
+            }
+        }
     }
 }

@@ -1,0 +1,324 @@
+
+> frontend@0.1.0 start
+> react-scripts start
+
+(node:99055) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:99055) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled successfully!
+
+You can now view frontend in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://10.31.117.244:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/pages/admin/UserManagementPage.jsx
+Syntax error: Only one default export allowed per module. (175:0) (175:undefined)
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+ERROR in ./src/pages/admin/UserManagementPage.jsx
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/src/pages/admin/UserManagementPage.jsx: Only one default export allowed per module. (175:0)
+
+  173 | export default UserManagementPage;
+  174 |
+> 175 | export default UserManagementPage;
+      | ^
+  176 |
+    at constructor (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:365:19)
+    at FlowParserMixin.raise (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:6599:19)
+    at FlowParserMixin.checkDuplicateExports (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:14074:14)
+    at FlowParserMixin.checkExport (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:14004:14)
+    at FlowParserMixin.parseExport (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:13835:12)
+    at FlowParserMixin.parseStatementContent (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:12878:27)
+    at FlowParserMixin.parseStatementLike (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:12767:17)
+    at FlowParserMixin.parseStatementLike (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:2918:24)
+    at FlowParserMixin.parseModuleItem (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:12744:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:13316:36)
+    at FlowParserMixin.parseBlockBody (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:13309:10)
+    at FlowParserMixin.parseProgram (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:12622:10)
+    at FlowParserMixin.parseTopLevel (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:12612:25)
+    at FlowParserMixin.parseTopLevel (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:3685:28)
+    at FlowParserMixin.parse (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:14488:25)
+    at parse (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/parser/lib/index.js:14522:38)
+    at parser (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/core/lib/transformation/index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/@babel/core/lib/transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/gensync/index.js:261:32)
+    at /Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/gensync/index.js:273:13
+    at async.call.result.err.err (/Users/duranka/user authenticTION AND NOTIFICATION/Smart-Campus-Operations/frontend/node_modules/gensync/index.js:223:11)
+
+ERROR in [eslint] 
+src/pages/admin/UserManagementPage.jsx
+  Line 175:  Parsing error: Only one default export allowed per module. (175:0)
+
+webpack compiled with 2 errors and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/admin/UserTable.jsx
+  Line 3:10:  'Trash2' is defined but never used  no-unused-vars
+
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/admin/UserTable.jsx
+  Line 3:10:  'Trash2' is defined but never used  no-unused-vars
+
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 66:9:   'handleDeleteUser' is assigned a value but never used                                                          no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 66:9:   'handleDeleteUser' is assigned a value but never used                                                          no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/home/signUp.js
+  Line 47:13:  'response' is assigned a value but never used  no-unused-vars
+
+src/pages/admin/UserManagementPage.jsx
+  Line 22:11:  'fetchCurrentUser' is assigned a value but never used                                                          no-unused-vars
+  Line 26:6:   React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning

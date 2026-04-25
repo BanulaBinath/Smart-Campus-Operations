@@ -14,6 +14,7 @@ const FACILITY_NAME_OPTIONS = [
 const FACILITY_TYPE_OPTIONS = ['CLASSROOM', 'LAB', 'HALL', 'SPORTS', 'EQUIPMENT', 'GROUND']
 const CATEGORY_OPTIONS = ['Academic', 'Sports']
 const STATUS_OPTIONS = ['ACTIVE', 'MAINTENANCE', 'INACTIVE']
+const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024
 
 function AddFacility({ onSuccess }) {
   const [formData, setFormData] = useState({
@@ -91,9 +92,9 @@ function AddFacility({ onSuccess }) {
         return
       }
 
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Image size must be less than 5MB')
+      // Validate file size (max 10MB)
+      if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        setError('Image size must be less than 10MB')
         return
       }
 
@@ -227,7 +228,7 @@ function AddFacility({ onSuccess }) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className="text-sm text-[var(--color-text-muted)]">Click to upload facility image</span>
-                <span className="text-xs text-[var(--color-text-placeholder)] mt-1">PNG, JPG up to 5MB</span>
+                <span className="text-xs text-[var(--color-text-placeholder)] mt-1">PNG, JPG up to 10MB</span>
                 <input
                   type="file"
                   accept="image/*"

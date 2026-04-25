@@ -5,7 +5,9 @@ import { getAllFacilities } from '../../services/facilityService';
 import { useAuth } from '../../context/AuthContext';
 
 const BASE_URL = "http://localhost:8080";
-const DEFAULT_IMAGE = "https://via.placeholder.com/400x250/e2e8f0/64748b?text=No+Image";
+const DEFAULT_IMAGE = `data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250"><rect width="400" height="250" fill="#e2e8f0"/><text x="200" y="125" text-anchor="middle" dominant-baseline="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="24">No Image</text></svg>`
+)}`;
 
 const StudentFacilitiesPage = () => {
   const [facilities, setFacilities] = useState([]);
@@ -172,7 +174,8 @@ const StudentFacilitiesPage = () => {
                         alt={facility.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          e.target.src = DEFAULT_IMAGE;
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = DEFAULT_IMAGE;
                         }}
                       />
                       <span className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-md ${

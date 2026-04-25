@@ -10,6 +10,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -48,6 +50,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Unauthorized", "Invalid email or password", request);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSize(MaxUploadSizeExceededException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.PAYLOAD_TOO_LARGE, "Payload Too Large", "Image size exceeds the allowed limit (10MB)", request);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<ErrorResponse> handleMultipartException(MultipartException ex, HttpServletRequest request) {
+        String message = ex.getMessage();
+        if (message != null && message.contains("FileSizeLimitExceededException")) {
+            return buildErrorResponse(HttpStatus.PAYLOAD_TOO_LARGE, "Payload Too Large", "Image size exceeds the allowed limit (10MB)", request);
+        }
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Bad Request", "Invalid multipart request payload", request);
     }
 
     @ExceptionHandler(Exception.class)

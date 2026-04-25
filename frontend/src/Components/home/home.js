@@ -30,7 +30,7 @@ function Home() {
 
       <section className="hero" id="home">
 
-        {/* Admin Button (FIXED - visible now) */}
+        {/* Admin button */}
         <div className="admin-btn-wrapper">
           <Link to="/admin">
             <button className="asd">Admin</button>
@@ -39,7 +39,7 @@ function Home() {
 
         <div className="hero-content">
           <p className="hero-tag">Smart Booking. Smooth Campus Life.</p>
-          <h1>Welcome to Smart Campus Operations Hub</h1>
+          <h1 style={{ fontWeight: '900', letterSpacing: '-0.02em', color: '#1a56db' }}>Welcome to CampusOps</h1>
 
           <p>
             Manage bookings for lecture halls, conference halls, sports grounds, and facility items
@@ -57,7 +57,7 @@ function Home() {
         <div className="about-inner">
           <h2>Built for Students, Staff, and Campus Teams</h2>
           <p>
-            Smart Campus Operations helps everyone coordinate spaces and resources with fewer
+            CampusOps helps everyone coordinate spaces and resources with fewer
             conflicts, faster approvals, and a better campus experience.
           </p>
         </div>
@@ -77,7 +77,6 @@ function Home() {
             </article>
           ))}
         </div>
-
         <div className="cta-wrap">
           <a href="#facilities" className="btn btn-primary">View Facilities</a>
         </div>

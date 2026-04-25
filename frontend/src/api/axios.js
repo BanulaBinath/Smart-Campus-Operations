@@ -13,13 +13,19 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    const status = error?.response?.status;
+    const shouldSkipAuthRedirect = Boolean(error?.config?.skipAuthRedirect);
+    const requestUrl = String(error?.config?.url || '');
+    const isCurrentUserProbe = requestUrl.includes('/users/me');
+    const isOnLoginPage = window.location.pathname === '/login';
+    const shouldRedirectToLogin =
+      status === 401 && !shouldSkipAuthRedirect && !isCurrentUserProbe && !isOnLoginPage;
+
+    if (shouldRedirectToLogin) {
       console.warn('Unauthorized: Redirecting to login');
-      // If we're not already on the login page, redirect
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
+      window.location.assign('/login');
     }
+
     return Promise.reject(error);
   }
 );

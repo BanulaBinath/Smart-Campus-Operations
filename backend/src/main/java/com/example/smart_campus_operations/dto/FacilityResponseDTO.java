@@ -16,4 +16,5 @@ public class FacilityResponseDTO {
     private String location;
     private String status;
     private String description;
+    private String imageUrl;
 }

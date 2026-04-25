@@ -27,4 +27,6 @@ public class Facility {
     private String status; // ACTIVE, OUT_OF_SERVICE
 
     private String description;
+
+    private String imageUrl;
 }

@@ -35,20 +35,45 @@ public class SmartCampusOperationsApplication {
 			com.example.smart_campus_operations.repository.UserRepository userRepository,
 			org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
 		return args -> {
-			String adminEmail = "admin@sliit.edu";
-			if (userRepository.findByEmail(adminEmail).isEmpty()) {
-				com.example.smart_campus_operations.entity.AppUser admin = com.example.smart_campus_operations.entity.AppUser.builder()
-						.name("System Administrator")
-						.email(adminEmail)
-						.password(passwordEncoder.encode("admin123"))
-						.role(com.example.smart_campus_operations.entity.Role.ADMIN)
-						.provider("SYSTEM")
-						.build();
-				userRepository.save(admin);
-				System.out.println("Default admin user created. Email: " + adminEmail + " | Password: admin123");
+			String adminEmail = "banulabinath.edu@gmail.com";
+			String legacyAdminEmail = "banula@gmail.com";
+			String adminPassword = "@Banula123";
+
+			java.util.Optional<com.example.smart_campus_operations.entity.AppUser> existingAdmin = userRepository.findByEmailIgnoreCase(adminEmail);
+			com.example.smart_campus_operations.entity.AppUser admin;
+
+			if (existingAdmin.isPresent()) {
+				admin = existingAdmin.get();
 			} else {
-				System.out.println("Admin user already exists.");
+				java.util.Optional<com.example.smart_campus_operations.entity.AppUser> legacyAdmin = userRepository.findByEmailIgnoreCase(legacyAdminEmail);
+				if (legacyAdmin.isPresent()) {
+					admin = legacyAdmin.get();
+					admin.setEmail(adminEmail);
+					System.out.println("Migrated admin email from " + legacyAdminEmail + " to " + adminEmail);
+				} else {
+					admin = com.example.smart_campus_operations.entity.AppUser.builder()
+							.name("Admin")
+							.email(adminEmail)
+							.role(com.example.smart_campus_operations.entity.Role.ADMIN)
+							.provider("SYSTEM")
+							.build();
+					System.out.println("Default admin user created. Email: " + adminEmail);
+				}
 			}
+
+			boolean passwordMatches = admin.getPassword() != null && passwordEncoder.matches(adminPassword, admin.getPassword());
+			if (!passwordMatches) {
+				admin.setPassword(passwordEncoder.encode(adminPassword));
+			}
+
+			admin.setName("Admin");
+			admin.setRole(com.example.smart_campus_operations.entity.Role.ADMIN);
+			if (admin.getProvider() == null || admin.getProvider().isBlank()) {
+				admin.setProvider("SYSTEM");
+			}
+
+			userRepository.save(admin);
+			System.out.println("Default admin user verified/updated. Email: " + adminEmail);
 		};
 	}
 

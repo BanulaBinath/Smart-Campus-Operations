@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from './sidebar'
-import './Facility.css'
+import { X, Trash2, Edit } from 'lucide-react'
+import axios from 'axios'
 import {
   deleteFacility,
+  getApiErrorMessage,
   getAllFacilities,
   getFacilityRoomNumberMap,
   removeFacilityRoomNumber,
   setFacilityRoomNumber,
-  updateFacility,
 } from '../../services/facilityService'
+
+const BASE_URL = "http://localhost:8080"
+const DEFAULT_IMAGE = "https://via.placeholder.com/400x250/e2e8f0/64748b?text=No+Image"
 
 const FACILITY_NAME_OPTIONS = [
   'IT Department',
@@ -45,6 +48,7 @@ const initialEditForm = {
   roomNumber: '',
   status: '',
   description: '',
+  location: '',
 }
 
 function Facility() {
@@ -54,6 +58,8 @@ function Facility() {
   const [editingFacility, setEditingFacility] = useState(null)
   const [editForm, setEditForm] = useState(initialEditForm)
   const [submitting, setSubmitting] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [preview, setPreview] = useState(null)
   const needsRoomNumber = ROOM_NUMBER_REQUIRED_TYPES.includes(normalizeType(editForm.type))
   const isGroundType = editForm.type === 'GROUND'
 
@@ -73,8 +79,8 @@ function Facility() {
     try {
       const data = await getAllFacilities()
       setFacilities(getEnrichedFacilities(Array.isArray(data) ? data : []))
-    } catch {
-      setError('Unable to load facilities. Please try again.')
+    } catch (error) {
+      setError(getApiErrorMessage(error, 'Unable to load facilities. Please try again.'))
     } finally {
       setLoading(false)
     }
@@ -96,8 +102,8 @@ function Facility() {
       await deleteFacility(id)
       removeFacilityRoomNumber(id)
       await loadFacilities()
-    } catch {
-      setError('Unable to delete facility. Please try again.')
+    } catch (error) {
+      setError(getApiErrorMessage(error, 'Unable to delete facility. Please try again.'))
     }
   }
 
@@ -113,7 +119,11 @@ function Facility() {
       roomNumber: facility.roomNumber || '',
       status: facility.status || '',
       description: facility.description || '',
+      location: facility.location || '',
     })
+    // Show existing image
+    setPreview(facility.imageUrl ? `${BASE_URL}${facility.imageUrl}` : null)
+    setSelectedFile(null)
   }
 
   const handleEditChange = (event) => {
@@ -126,6 +136,32 @@ function Facility() {
       ...(name === 'type' && !ROOM_NUMBER_REQUIRED_TYPES.includes(nextType) ? { roomNumber: '' } : {}),
       [name]: name === 'type' ? nextType : value,
     }))
+  }
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError('Please select a valid image file')
+        return
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image size must be less than 5MB')
+        return
+      }
+
+      setSelectedFile(file)
+      setPreview(URL.createObjectURL(file))
+      setError('')
+    }
+  }
+
+  const removeImage = () => {
+    setSelectedFile(null)
+    setPreview(editingFacility?.imageUrl ? `${BASE_URL}${editingFacility.imageUrl}` : null)
   }
 
   const validateEditForm = () => {
@@ -179,21 +215,42 @@ function Facility() {
     setError('')
 
     try {
-      await updateFacility(editingFacility.id, {
+      const facilityData = {
         name: editForm.name,
         type: editForm.type,
         category: editForm.category,
         capacity: isGroundType ? 0 : Number(editForm.capacity),
         status: editForm.status,
         description: editForm.description,
-        location: '',
+        location: editForm.location || '',
+      }
+
+      // Use FormData for update
+      const formDataToSend = new FormData()
+      formDataToSend.append('facility', new Blob([JSON.stringify(facilityData)], { type: 'application/json' }))
+      
+      // Only append image if a new one was selected
+      if (selectedFile) {
+        formDataToSend.append('image', selectedFile)
+      }
+
+      // Send update request
+      await axios.put(`${BASE_URL}/api/facilities/${editingFacility.id}`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
       })
+
       setFacilityRoomNumber(editingFacility.id, needsRoomNumber ? editForm.roomNumber : '')
       setEditingFacility(null)
       setEditForm(initialEditForm)
+      setSelectedFile(null)
+      setPreview(null)
       await loadFacilities()
-    } catch {
-      setError('Unable to update facility. Please try again.')
+    } catch (error) {
+      console.error('Update error:', error)
+      setError(getApiErrorMessage(error, 'Unable to update facility. Please try again.'))
     } finally {
       setSubmitting(false)
     }
@@ -202,193 +259,245 @@ function Facility() {
   const closeEditModal = () => {
     setEditingFacility(null)
     setEditForm(initialEditForm)
+    setSelectedFile(null)
+    setPreview(null)
   }
 
   return (
-    <div className="admin-shell">
-      <Sidebar />
+    <div className="w-full">
+      {error && (
+        <div className="m-6 bg-red-50 text-red-600 text-sm p-4 rounded-lg border border-red-100 flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-red-600"></span>
+          {error}
+        </div>
+      )}
 
-      <main className="admin-content facility-page">
-        <section className="page-header">
-          <p className="page-eyebrow">Campus Operations</p>
-          <h1>Facility Management Dashboard</h1>
-          <p className="page-description">
-            Monitor facility records, add new spaces, and keep campus operations organized from a single place.
-          </p>
-        </section>
-
-        <section className="table-section" aria-label="Facility data table">
-          <div className="table-card">
-            <div className="table-card-header">
-              <div>
-                <p className="table-eyebrow">Current Records</p>
-                <h2>Facility List</h2>
-              </div>
-              <p className="table-note">Backend data is loaded from the Spring Boot API.</p>
-            </div>
-
-            {error && <div className="inline-message inline-message-error">{error}</div>}
-
-            {loading ? (
-              <div className="table-state">Loading facilities...</div>
-            ) : (
-            <div className="table-wrap">
-              <table className="facility-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Facility Name</th>
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Capacity</th>
-                    <th>Room Number</th>
-                    <th>Status</th>
-                    <th>Description</th>
-                    <th>Actions</th>
+      {loading ? (
+        <div className="flex justify-center p-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-primary)] border-t-transparent"></div>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-[var(--color-text)]">
+            <thead className="bg-[#F8FAFC] text-xs uppercase text-[var(--color-text-muted)] border-b border-[var(--color-border)]">
+              <tr>
+                <th className="px-6 py-4 font-semibold">Image</th>
+                <th className="px-6 py-4 font-semibold">ID</th>
+                <th className="px-6 py-4 font-semibold">Facility Name</th>
+                <th className="px-6 py-4 font-semibold">Type</th>
+                <th className="px-6 py-4 font-semibold">Category</th>
+                <th className="px-6 py-4 font-semibold">Capacity</th>
+                <th className="px-6 py-4 font-semibold">Room Number</th>
+                <th className="px-6 py-4 font-semibold">Status</th>
+                <th className="px-6 py-4 font-semibold">Description</th>
+                <th className="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border)]">
+              {facilities.length > 0 ? (
+                facilities.map((facility) => (
+                  <tr key={facility.id} className="hover:bg-[#F8FAFC] transition-colors">
+                    <td className="px-6 py-4">
+                      <img 
+                        src={facility.imageUrl ? `${BASE_URL}${facility.imageUrl}` : DEFAULT_IMAGE}
+                        alt="facility"
+                        width="80"
+                        height="60"
+                        style={{ objectFit: "cover", borderRadius: "8px" }}
+                        onError={(e) => {
+                          e.target.src = DEFAULT_IMAGE
+                        }}
+                      />
+                    </td>
+                    <td className="px-6 py-4 font-medium">{facility.id}</td>
+                    <td className="px-6 py-4">{facility.name}</td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                        {facility.type}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">{facility.category}</td>
+                    <td className="px-6 py-4">{facility.type === 'GROUND' ? '-' : facility.capacity}</td>
+                    <td className="px-6 py-4">{facility.roomNumber || '-'}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${facility.status === 'ACTIVE' ? 'bg-green-50 text-green-700 border-green-200' :
+                          facility.status === 'MAINTENANCE' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                            'bg-gray-50 text-gray-700 border-gray-200'
+                        }`}>
+                        {facility.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 max-w-[200px] truncate" title={facility.description}>{facility.description}</td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => handleEditClick(facility)}
+                          className="rounded-[8px] border border-[var(--color-border)] bg-white px-3 py-1.5 text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary-light)] flex items-center gap-1.5"
+                        >
+                          <Edit size={14} /> Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(facility.id)}
+                          className="rounded-[8px] border border-[var(--color-border)] bg-white p-1.5 text-[var(--color-danger)] transition-colors hover:bg-red-50 hover:border-red-200"
+                          title="Delete Facility"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {facilities.length > 0 ? (
-                    facilities.map((facility) => (
-                      <tr key={facility.id}>
-                        <td>{facility.id}</td>
-                        <td>{facility.name}</td>
-                        <td>{facility.type}</td>
-                        <td>{facility.category}</td>
-                        <td>{facility.type === 'GROUND' ? '-' : facility.capacity}</td>
-                        <td>{facility.roomNumber || '-'}</td>
-                        <td>{facility.status}</td>
-                        <td>{facility.description}</td>
-                        <td>
-                          <div className="table-actions">
-                            <button type="button" className="btn-update" onClick={() => handleEditClick(facility)}>
-                              Update
-                            </button>
-                            <button type="button" className="btn-delete" onClick={() => handleDelete(facility.id)}>
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="9">
-                        <div className="table-state">No facilities found.</div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            )}
-          </div>
-        </section>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="10" className="px-6 py-8 text-center text-[var(--color-text-muted)]">
+                    No facilities found matching your criteria.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-        {editingFacility && (
-          <div className="modal-backdrop" role="presentation" onClick={closeEditModal}>
-            <div className="modal-card" role="dialog" aria-modal="true" aria-labelledby="edit-facility-title" onClick={(event) => event.stopPropagation()}>
-              <div className="modal-header">
-                <div>
-                  <p className="table-eyebrow">Update Record</p>
-                  <h2 id="edit-facility-title">Edit Facility</h2>
-                </div>
-                <button type="button" className="modal-close" onClick={closeEditModal} aria-label="Close update form">
-                  Close
-                </button>
+      {editingFacility && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm animate-in fade-in" onClick={closeEditModal}>
+          <div className="w-full max-w-[600px] rounded-[16px] bg-[var(--color-surface)] shadow-2xl animate-in zoom-in-95 border border-[var(--color-border)] flex flex-col max-h-[90vh]" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-[var(--color-border)] px-6 py-4 shrink-0">
+              <div>
+                <h2 className="text-lg font-bold text-[var(--color-text)]">Edit Facility Details</h2>
+                <p className="text-xs text-[var(--color-text-muted)]">Update information for {editingFacility.name}</p>
               </div>
+              <button type="button" className="rounded-full p-2 text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-text)] transition-colors" onClick={closeEditModal}>
+                <X size={18} />
+              </button>
+            </div>
 
-              <form className="facility-form facility-form-modal" onSubmit={handleEditSubmit}>
-                <div className="form-grid">
-                  <label className="form-field">
-                    <span>Facility Name</span>
-                    <select name="name" value={editForm.name} onChange={handleEditChange} required>
-                      <option value="" disabled>
-                        Select Facility Name
-                      </option>
+            <form onSubmit={handleEditSubmit} className="flex flex-col flex-1 overflow-hidden">
+              <div className="px-6 py-6 overflow-y-auto space-y-4">
+                {/* Image Upload Section */}
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Facility Image</label>
+                  {preview && (
+                    <div className="relative">
+                      <img 
+                        src={preview}
+                        alt="preview"
+                        style={{ width: "100%", height: "180px", objectFit: "cover", borderRadius: "10px", marginTop: "10px" }}
+                      />
+                      {selectedFile && (
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors shadow-lg"
+                        >
+                          <X size={16} />
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="w-full px-4 py-2 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all"
+                  />
+                  <p className="text-xs text-[var(--color-text-placeholder)]">Upload a new image to replace the existing one (optional)</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Facility Name</label>
+                    <select name="name" value={editForm.name} onChange={handleEditChange} required className="w-full px-4 py-2 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all">
+                      <option value="" disabled>Select Facility Name</option>
                       {FACILITY_NAME_OPTIONS.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
+                        <option key={option} value={option}>{option}</option>
                       ))}
                     </select>
-                  </label>
+                  </div>
 
-                  <label className="form-field">
-                    <span>Type</span>
-                    <select name="type" value={editForm.type} onChange={handleEditChange} required>
-                      <option value="" disabled>
-                        Select Type
-                      </option>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Type</label>
+                    <select name="type" value={editForm.type} onChange={handleEditChange} required className="w-full px-4 py-2 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all">
+                      <option value="" disabled>Select Type</option>
                       {FACILITY_TYPE_OPTIONS.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
+                        <option key={option} value={option}>{option}</option>
                       ))}
                     </select>
-                  </label>
+                  </div>
 
-                  <label className="form-field">
-                    <span>Category</span>
-                    <select name="category" value={editForm.category} onChange={handleEditChange} required>
-                      <option value="" disabled>
-                        Select Category
-                      </option>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Category</label>
+                    <select name="category" value={editForm.category} onChange={handleEditChange} required className="w-full px-4 py-2 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all">
+                      <option value="" disabled>Select Category</option>
                       {CATEGORY_OPTIONS.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
+                        <option key={option} value={option}>{option}</option>
                       ))}
                     </select>
-                  </label>
+                  </div>
 
                   {!isGroundType && (
-                    <label className="form-field">
-                      <span>Capacity</span>
-                      <input type="number" name="capacity" min="1" max="60" value={editForm.capacity} onChange={handleEditChange} required />
-                    </label>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Capacity</label>
+                      <input type="number" name="capacity" min="1" max="60" value={editForm.capacity} onChange={handleEditChange} required className="w-full px-4 py-2 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all" />
+                    </div>
                   )}
 
                   {needsRoomNumber && (
-                    <label className="form-field">
-                      <span>Room Number</span>
-                      <input type="text" name="roomNumber" value={editForm.roomNumber} onChange={handleEditChange} placeholder="Enter room number" required />
-                    </label>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Room Number</label>
+                      <input type="text" name="roomNumber" value={editForm.roomNumber} onChange={handleEditChange} placeholder="Enter room number" required className="w-full px-4 py-2 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all" />
+                    </div>
                   )}
 
-                  <label className="form-field">
-                    <span>Status</span>
-                    <select name="status" value={editForm.status} onChange={handleEditChange} required>
-                      <option value="" disabled>
-                        Select Status
-                      </option>
-                      {STATUS_OPTIONS.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Location</label>
+                    <input type="text" name="location" value={editForm.location} onChange={handleEditChange} placeholder="Enter location" className="w-full px-4 py-2 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all" />
+                  </div>
+
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Status</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {STATUS_OPTIONS.map((status) => (
+                        <label
+                          key={status}
+                          className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 transition-all ${editForm.status === status
+                              ? 'border-[var(--color-primary)] bg-[var(--color-primary-light)]/20 text-[var(--color-primary-text)] font-medium'
+                              : 'border-[var(--color-border)] hover:bg-[var(--color-bg)] grayscale'
+                            }`}
+                        >
+                          <input
+                            type="radio"
+                            name="status"
+                            value={status}
+                            checked={editForm.status === status}
+                            onChange={handleEditChange}
+                            className="hidden"
+                          />
+                          <span className="text-xs">{status}</span>
+                        </label>
                       ))}
-                    </select>
-                  </label>
+                    </div>
+                  </div>
 
-                  <label className="form-field form-field-full">
-                    <span>Description</span>
-                    <textarea name="description" rows="4" value={editForm.description} onChange={handleEditChange} />
-                  </label>
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Description</label>
+                    <textarea name="description" rows="3" value={editForm.description} onChange={handleEditChange} className="w-full px-4 py-2 border border-[var(--color-border)] rounded-[10px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] transition-all" />
+                  </div>
                 </div>
+              </div>
 
-                <div className="form-actions form-actions-modal">
-                  <button type="button" className="secondary-button" onClick={closeEditModal}>
-                    Cancel
-                  </button>
-                  <button type="submit" className="submit-button" disabled={submitting}>
-                    {submitting ? 'Saving...' : 'Update Facility'}
-                  </button>
-                </div>
-              </form>
-            </div>
+              <div className="flex items-center justify-end gap-3 border-t border-[var(--color-border)] px-6 py-4 bg-gray-50/50 rounded-b-[16px] shrink-0">
+                <button type="button" onClick={closeEditModal} className="px-4 py-2 text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors">
+                  Cancel
+                </button>
+                <button type="submit" disabled={submitting} className="flex items-center justify-center min-w-[120px] rounded-[10px] bg-[var(--color-primary)] px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-[var(--color-primary-light)] hover:bg-[var(--color-primary-hover)] hover:-translate-y-0.5 active:translate-y-0 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  {submitting ? 'Saving...' : 'Update Facility'}
+                </button>
+              </div>
+            </form>
           </div>
-        )}
-      </main>
+        </div>
+      )}
     </div>
   )
 }

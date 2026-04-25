@@ -68,34 +68,37 @@ const NotificationBell = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-primary)] transition-colors"
+        className="relative flex h-10 w-10 items-center justify-center rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-all duration-200"
       >
         <Bell size={20} />
         {unreadCount > 0 && (
-          <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-danger)] text-[10px] font-bold text-white">
+          <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 md:w-96 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg z-50">
-          <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-3">
-            <h3 className="font-semibold text-[var(--color-text)]">Notifications</h3>
+        <div className="absolute right-0 top-12 mt-1 w-80 md:w-96 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl shadow-gray-200/50 z-50 transform opacity-100 scale-100 transition-all origin-top-right">
+          <div className="flex items-center justify-between border-b border-gray-50 bg-gray-50/50 px-4 py-3.5">
+            <h3 className="font-bold text-gray-900">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="text-xs font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
+                className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
               >
                 Mark all read
               </button>
             )}
           </div>
 
-          <div className="max-h-[70vh] overflow-y-auto">
+          <div className="max-h-[60vh] overflow-y-auto divide-y divide-gray-50 custom-scrollbar">
             {notifications.length === 0 ? (
-              <div className="px-4 py-8 text-center text-sm text-[var(--color-text-muted)]">
-                You're all caught up!
+              <div className="px-4 py-12 flex flex-col items-center justify-center text-center">
+                <div className="rounded-full bg-gray-50 p-3 mb-3">
+                  <Bell size={24} className="text-gray-300" />
+                </div>
+                <p className="text-sm font-medium text-gray-500">You're all caught up!</p>
               </div>
             ) : (
               <div className="flex flex-col">
@@ -106,11 +109,11 @@ const NotificationBell = () => {
             )}
           </div>
 
-          <div className="border-t border-[var(--color-border)] px-4 py-3 text-center bg-[var(--color-bg)] rounded-b-xl">
+          <div className="border-t border-gray-50 px-4 py-3 text-center bg-gray-50/30">
             <Link
               to="/notifications"
               onClick={() => setIsOpen(false)}
-              className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
+              className="text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors block w-full"
             >
               View all notifications
             </Link>

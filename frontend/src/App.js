@@ -9,6 +9,8 @@ import DashboardPage from './pages/DashboardPage';
 import NotificationsPage from './pages/NotificationsPage';
 import ProfilePage from './pages/ProfilePage';
 import UserManagementPage from './pages/admin/UserManagementPage';
+import FacilitiesPage from './pages/admin/FacilitiesPage';
+import StudentFacilities from './pages/student/StudentFacilities';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Original Components
@@ -45,9 +47,18 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           
           {/* Stubs for other modules */}
-          <Route path="/facilities" element={<DashboardPage />} />
           <Route path="/bookings" element={<DashboardPage />} />
           <Route path="/incidents" element={<DashboardPage />} />
+        </Route>
+
+        {/* Admin and Technician Routes */}
+        <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'TECHNICIAN']} />}>
+          <Route path="/admin/facilities" element={<FacilitiesPage />} />
+        </Route>
+
+        {/* Student/Lecturer/User Facility View (Read-Only) */}
+        <Route element={<ProtectedRoute allowedRoles={['STUDENT', 'USER', 'LECTURER']} />}>
+          <Route path="/facilities" element={<StudentFacilities />} />
         </Route>
         
         {/* Admin Only Routes */}

@@ -18,11 +18,19 @@ const Sidebar = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Facilities', path: '/facilities', icon: Building2 }, // Module A stub
+  ];
+
+  if (user?.role === 'ADMIN' || user?.role === 'TECHNICIAN') {
+    navItems.push({ name: 'Facilities', path: '/admin/facilities', icon: Building2 });
+  } else if (user?.role === 'STUDENT' || user?.role === 'USER' || user?.role === 'LECTURER') {
+    navItems.push({ name: 'Facilities', path: '/facilities', icon: Building2 });
+  }
+
+  navItems.push(
     { name: 'Bookings', path: '/bookings', icon: CalendarCheck }, // Module B stub
     { name: 'Incidents', path: '/incidents', icon: AlertTriangle }, // Module C stub
-    { name: 'Notifications', path: '/notifications', icon: Bell },
-  ];
+    { name: 'Notifications', path: '/notifications', icon: Bell }
+  );
 
   if (user?.role === 'ADMIN') {
     navItems.push({ name: 'Users', path: '/admin/users', icon: Users });
@@ -31,9 +39,11 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 hidden h-full w-[240px] flex-col bg-[var(--color-sidebar-bg)] text-[var(--color-sidebar-text)] md:flex shadow-xl z-40">
       {/* Logo Area */}
-      <div className="flex h-16 items-center justify-center border-b border-white/10 gap-2 font-bold px-4">
-        <GraduationCap size={28} className="text-white" />
-        <span className="text-xl text-white tracking-wide">SmartCampus</span>
+      <div className="flex h-16 items-center justify-center border-b border-white/10 gap-2 px-4">
+        <div className="flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-1.5 shadow-md">
+          <GraduationCap size={24} className="text-white" />
+        </div>
+        <span className="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">CampusOps</span>
       </div>
 
       {/* Nav Links */}

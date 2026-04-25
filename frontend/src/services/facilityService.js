@@ -1,31 +1,94 @@
-import axios from 'axios'
+import api from '../api/axios'
+import { API_BASE_URL } from '../config/backendUrls'
 
-const API_URL = 'http://localhost:8080/api/facilities'
+const API_URL = API_BASE_URL.replace(/\/api\/v1$/, '/api/facilities')
 const ROOM_NUMBER_STORE_KEY = 'facilityRoomNumbers'
 
-const buildPayload = (data = {}) => ({
-  ...data,
-  location: '',
-  capacity: Number(data.capacity) || 0,
+const TOKEN_STORAGE_KEYS = ['token', 'authToken', 'accessToken', 'jwt', 'jwtToken', 'bearerToken']
+
+const getStoredToken = () => {
+  if (typeof window === 'undefined') {
+    return ''
+  }
+
+  for (const key of TOKEN_STORAGE_KEYS) {
+    const localValue = window.localStorage.getItem(key)
+    if (localValue) {
+      return localValue
+    }
+
+    const sessionValue = window.sessionStorage.getItem(key)
+    if (sessionValue) {
+      return sessionValue
+    }
+  }
+
+  return ''
+}
+
+const buildAuthHeaders = () => {
+  const token = getStoredToken()
+  if (!token) {
+    return {}
+  }
+
+  return {
+    Authorization: token.startsWith('Bearer ') ? token : `Bearer ${token}`,
+  }
+}
+
+const buildRequestConfig = (extraConfig = {}) => ({
+  ...extraConfig,
+  headers: {
+    'Content-Type': 'application/json',
+    ...buildAuthHeaders(),
+    ...(extraConfig.headers || {}),
+  },
 })
 
+const facilityEndpoint = (suffix = '') => `${API_URL}${suffix}`
+
+const buildPayload = (data = {}) => ({
+  name: data.name || '',
+  type: data.type || '',
+  category: data.category || '',
+  capacity: Number(data.capacity) || 0,
+  location: data.location ?? '',
+  status: data.status || '',
+  description: data.description || '',
+})
+
+export const getApiErrorMessage = (error, fallbackMessage) => {
+  const message =
+    error?.response?.data?.message ||
+    error?.response?.data?.error ||
+    error?.message
+
+  return message || fallbackMessage
+}
+
 export const getAllFacilities = async () => {
-  const response = await axios.get(API_URL)
+  const response = await api.get(facilityEndpoint(), buildRequestConfig())
+  return response.data
+}
+
+export const getFacilityById = async (id) => {
+  const response = await api.get(facilityEndpoint(`/${id}`), buildRequestConfig())
   return response.data
 }
 
 export const addFacility = async (data) => {
-  const response = await axios.post(API_URL, buildPayload(data))
+  const response = await api.post(facilityEndpoint(), buildPayload(data), buildRequestConfig())
   return response.data
 }
 
 export const updateFacility = async (id, data) => {
-  const response = await axios.put(`${API_URL}/${id}`, buildPayload(data))
+  const response = await api.put(facilityEndpoint(`/${id}`), buildPayload(data), buildRequestConfig())
   return response.data
 }
 
 export const deleteFacility = async (id) => {
-  const response = await axios.delete(`${API_URL}/${id}`)
+  const response = await api.delete(facilityEndpoint(`/${id}`), buildRequestConfig())
   return response.data
 }
 

@@ -44,11 +44,6 @@ const StudentFacilitiesPage = () => {
     fetchFacilities();
   }, [user]);
 
-  const handleBookNow = (facilityId) => {
-    // Placeholder for future booking development
-    alert(`Booking flow for facility ${facilityId} is not yet implemented.`);
-  };
-
   // Derive unique types and statuses for dropdowns
   const availableTypes = useMemo(() => {
     const types = new Set(facilities.map(f => f.type?.toUpperCase() || 'UNKNOWN'));
@@ -81,7 +76,7 @@ const StudentFacilitiesPage = () => {
               <div>
                 <h1 className="text-2xl font-bold text-[var(--color-text)]">Available Facilities</h1>
                 <p className="text-sm text-[var(--color-text-muted)] mt-1">
-                  Browse and book available campus facilities.
+                  Browse and view available campus facilities.
                 </p>
               </div>
             </div>
@@ -147,62 +142,61 @@ const StudentFacilitiesPage = () => {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredFacilities.map((facility) => (
                   <div 
                     key={facility.id} 
-                    className="bg-[var(--color-surface)] rounded-[12px] border border-[var(--color-border)] shadow-[0_1px_3px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col hover:shadow-md transition-shadow"
+                    className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col"
                   >
-                    <div className="p-5 flex-1">
-                      <div className="flex justify-between items-start mb-4 gap-2">
-                        <h3 className="text-lg font-semibold text-[var(--color-text)] truncate" title={facility.name}>
+                    {/* Optional Image Section */}
+                    {facility.imageUrl && (
+                      <div className="h-48 w-full bg-gray-100 overflow-hidden">
+                        <img 
+                          src={facility.imageUrl} 
+                          alt={facility.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    
+                    <div className="p-6 flex-1 flex flex-col">
+                      <div className="flex justify-between items-start mb-4 gap-3">
+                        <h3 className="text-lg font-bold text-gray-900 line-clamp-2" title={facility.name}>
                           {facility.name}
                         </h3>
-                        <span className="inline-flex shrink-0 items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                          {facility.type}
+                        <span className="inline-flex shrink-0 items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
+                          {facility.type || 'N/A'}
                         </span>
                       </div>
                       
-                      <div className="space-y-2 mb-4 text-sm text-[var(--color-text)]">
-                        <div className="flex justify-between">
-                          <span className="text-[var(--color-text-muted)]">Category:</span>
-                          <span className="font-medium">{facility.category || '-'}</span>
+                      <div className="space-y-3 mb-5 text-sm text-gray-600 flex-1">
+                        <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+                          <span className="text-gray-500 font-medium">Location</span>
+                          <span className="font-semibold text-gray-800 text-right">{facility.location || facility.category || 'TBD'}</span>
                         </div>
                         {facility.type !== 'GROUND' && (
-                          <div className="flex justify-between">
-                            <span className="text-[var(--color-text-muted)]">Capacity:</span>
-                            <span className="font-medium">{facility.capacity || '-'}</span>
+                          <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+                            <span className="text-gray-500 font-medium">Capacity</span>
+                            <span className="font-semibold text-gray-800">{facility.capacity || 'N/A'}</span>
                           </div>
                         )}
-                        <div className="flex justify-between">
-                          <span className="text-[var(--color-text-muted)]">Status:</span>
-                          <span className={`font-medium ${facility.status === 'ACTIVE' ? 'text-green-600' : 'text-orange-600'}`}>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-500 font-medium">Status</span>
+                          <span className={`font-semibold px-2 py-0.5 rounded text-xs ${
+                            facility.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                          }`}>
                             {facility.status || 'UNKNOWN'}
                           </span>
                         </div>
                       </div>
                       
                       {facility.description && (
-                        <div className="mb-4">
-                          <p className="text-sm text-[var(--color-text-muted)] line-clamp-2" title={facility.description}>
+                        <div className="mt-auto pt-4 border-t border-gray-100">
+                          <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed" title={facility.description}>
                             {facility.description}
                           </p>
                         </div>
                       )}
-                    </div>
-                    
-                    <div className="px-5 py-4 border-t border-[var(--color-border)] bg-gray-50/50 mt-auto">
-                      <button
-                        onClick={() => handleBookNow(facility.id)}
-                        disabled={facility.status !== 'ACTIVE'}
-                        className={`w-full py-2.5 px-4 rounded-[8px] font-semibold text-sm transition-all text-center ${
-                          facility.status === 'ACTIVE'
-                            ? 'bg-[var(--color-primary)] text-white shadow-sm hover:opacity-90'
-                            : 'bg-gray-200 text-[var(--color-text-muted)] cursor-not-allowed'
-                        }`}
-                      >
-                        {facility.status === 'ACTIVE' ? 'Book Now' : 'Not Available'}
-                      </button>
                     </div>
                   </div>
                 ))}

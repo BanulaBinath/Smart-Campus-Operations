@@ -4,7 +4,7 @@ import TopBar from '../components/layout/TopBar';
 import Sidebar from '../components/layout/Sidebar';
 import NotificationItem from '../components/notifications/NotificationItem';
 import { notificationApi } from '../api/notificationApi';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../components/context/AuthContext';
 
 const NotificationsPage = () => {
   const { user } = useAuth();

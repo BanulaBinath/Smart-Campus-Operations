@@ -5,7 +5,7 @@ import Nav from './nav';
 import Footer from './footer';
 import './signUp.css';
 
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function SignUp() {
   const { isAuthenticated, loading } = useAuth();
@@ -44,7 +44,7 @@ function SignUp() {
     setSubmitting(true);
 
     try {
-      const response = await api.post('/auth/register', {
+      await api.post('/auth/register', {
         name: formData.name,
         email: formData.email,
         password: formData.password

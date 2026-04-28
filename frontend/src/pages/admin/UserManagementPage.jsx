@@ -8,7 +8,7 @@ import CreateUserModal from '../../components/admin/CreateUserModal';
 import Toast from '../../components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { userApi } from '../../api/userApi';
-import { useAuth } from '../../context/AuthContext';
+
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
@@ -19,10 +19,11 @@ const UserManagementPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   
   const { toasts, removeToast, success, error } = useToast();
-  const { fetchCurrentUser } = useAuth(); // If they update their own role, might need to re-fetch, though they are admin so maybe not.
+  // const { fetchCurrentUser } = useAuth();
 
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchUsers = async () => {

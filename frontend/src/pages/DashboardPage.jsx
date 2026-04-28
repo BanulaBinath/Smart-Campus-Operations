@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import TopBar from '../components/layout/TopBar';
 import Sidebar from '../components/layout/Sidebar';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../components/context/AuthContext';
 import { notificationApi } from '../api/notificationApi';
 import NotificationItem from '../components/notifications/NotificationItem';
 import { 
@@ -12,7 +12,7 @@ import {
   Bell,
   ArrowRight,
   TrendingUp,
-  Clock,
+  
   CheckCheck
 } from 'lucide-react';
 

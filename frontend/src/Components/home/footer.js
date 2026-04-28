@@ -42,8 +42,8 @@ function Footer() {
             <ul className="space-y-3 m-0 p-0 list-none text-left">
               <li className="m-0 p-0"><Link to="/login" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">User Portal</Link></li>
               <li className="m-0 p-0"><Link to="/signup" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">Create Account</Link></li>
-              <li className="m-0 p-0"><a href="#" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">Help Center & FAQ</a></li>
-              <li className="m-0 p-0"><a href="#" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">Campus Maps</a></li>
+              <li className="m-0 p-0"><a href="/" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">Help Center & FAQ</a></li>
+              <li className="m-0 p-0"><a href="/" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">Campus Maps</a></li>
             </ul>
           </div>
 
@@ -70,9 +70,9 @@ function Footer() {
         <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           <p className="m-0 p-0">&copy; {currentYear} CampusOps. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white hover:underline transition-all">Privacy Policy</a>
-            <a href="#" className="hover:text-white hover:underline transition-all">Terms of Service</a>
-            <a href="#" className="hover:text-white hover:underline transition-all">Cookie Policy</a>
+            <a href="/" className="hover:text-white hover:underline transition-all">Privacy Policy</a>
+            <a href="/" className="hover:text-white hover:underline transition-all">Terms of Service</a>
+            <a href="/" className="hover:text-white hover:underline transition-all">Cookie Policy</a>
           </div>
         </div>
       </div>

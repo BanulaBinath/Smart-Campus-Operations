@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../api/axios';
+import api from '../../api/axios';
 
 const AuthContext = createContext(null);
 
@@ -11,8 +11,14 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.get('/users/me');
       setUser(response.data);
+      console.log('User authenticated successfully:', response.data);
     } catch (error) {
-      console.error('Failed to fetch user:', error);
+      // Only log non-401 errors as these are expected for unauthenticated users
+      if (error.response?.status !== 401) {
+        console.error('Unexpected error fetching user:', error);
+      } else {
+        console.log('User not authenticated (401) - this is normal for logged out users');
+      }
       setUser(null);
     } finally {
       setLoading(false);

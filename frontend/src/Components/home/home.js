@@ -30,9 +30,10 @@ function Home() {
   ];
 
   const teamMembers = [
-    { name: 'Alice Johnson', role: 'Campus Director' },
-    { name: 'Bob Smith', role: 'Facilities Manager' },
-    { name: 'Carol White', role: 'Student Coordinator' }
+    { name: 'R B B Jayathilaka', role: 'Project Lead' },
+    { name: 'Prathish S', role: 'Backend Developer' },
+    { name: 'Siddarth J', role: 'Frontend Developer' },
+    { name: 'A M D S K Attanayake', role: 'QA & DevOps Engineer' }
   ];
 
   return (
@@ -91,52 +92,64 @@ function Home() {
       </section>
 
       {/* About Us Section */}
-      <section id="about" className="py-24 bg-gray-50 border-t border-gray-100">
+      <section id="about" className="py-24 bg-gray-50 border-t border-gray-100 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-10 lg:p-16 text-center text-white mb-16 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
+          <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 rounded-[2.5rem] p-12 lg:p-20 text-center text-white mb-20 shadow-[0_20px_50px_rgba(13,93,216,0.3)] relative group">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/3 group-hover:scale-110 transition-transform duration-700"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-400 opacity-20 rounded-full blur-3xl transform -translate-x-1/3 translate-y-1/3 group-hover:scale-110 transition-transform duration-700"></div>
             <div className="relative z-10">
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6">About CampusOps</h2>
-              <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+              <span className="inline-block py-1 px-4 rounded-full bg-blue-500/30 border border-blue-400/30 text-blue-50 text-sm font-semibold tracking-wider uppercase mb-6 backdrop-blur-sm">Our Organization</span>
+              <h2 className="text-4xl lg:text-5xl font-extrabold mb-6 tracking-tight">About CampusOps</h2>
+              <p className="text-xl lg:text-2xl text-blue-100/90 max-w-4xl mx-auto leading-relaxed font-light">
                 Built for students, staff, and campus administrators. We believe in coordinating spaces 
                 and resources with fewer conflicts, faster approvals, and a substantially better campus experience.
               </p>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="bg-white p-10 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-blue-100 text-blue-600 rounded-xl"><Target className="w-6 h-6" /></div>
-                <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
+          <div className="grid md:grid-cols-2 gap-10 mb-24">
+            <div className="bg-white p-12 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_20px_40px_rgba(13,93,216,0.1)] hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+              <div className="absolute -top-10 -right-10 p-8 opacity-5 group-hover:opacity-10 transition-opacity duration-300 transform group-hover:scale-110"><Target className="w-48 h-48 text-blue-600" /></div>
+              <div className="relative z-10">
+                <div className="inline-flex p-4 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 rounded-2xl mb-6 shadow-sm border border-blue-100/50 group-hover:scale-110 transition-transform duration-300">
+                  <Target className="w-8 h-8" />
+                </div>
+                <h3 className="text-3xl font-extrabold text-gray-900 mb-6">Our Mission</h3>
+                <p className="text-gray-600 leading-relaxed text-lg font-medium">
+                  To simplify and modernize campus operations by providing a centralized platform for facility booking, asset management, maintenance ticketing, and real-time notifications, ensuring a seamless experience for students, staff, and administrators.
+                </p>
               </div>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                To streamline campus operations by providing an intuitive, transparent, and efficient booking ecosystem that empowers the academic community to focus on what truly matters.
-              </p>
             </div>
-            <div className="bg-white p-10 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-blue-100 text-blue-600 rounded-xl"><Flag className="w-6 h-6" /></div>
-                <h3 className="text-2xl font-bold text-gray-900">Our Vision</h3>
+            <div className="bg-white p-12 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_20px_40px_rgba(13,93,216,0.1)] hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+              <div className="absolute -top-10 -right-10 p-8 opacity-5 group-hover:opacity-10 transition-opacity duration-300 transform group-hover:scale-110"><Flag className="w-48 h-48 text-blue-600" /></div>
+              <div className="relative z-10">
+                <div className="inline-flex p-4 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 rounded-2xl mb-6 shadow-sm border border-blue-100/50 group-hover:scale-110 transition-transform duration-300">
+                  <Flag className="w-8 h-8" />
+                </div>
+                <h3 className="text-3xl font-extrabold text-gray-900 mb-6">Our Vision</h3>
+                <p className="text-gray-600 leading-relaxed text-lg font-medium">
+                  To become the leading smart campus operations platform that transforms university resource management through innovation, efficiency, transparency, and technology-driven workflows.
+                </p>
               </div>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                Pioneering the future of educational infrastructure management through smart, data-driven software that natively understands the needs of modern universities.
-              </p>
             </div>
           </div>
 
-          <div className="text-center mb-10">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Meet the Team</h3>
-            <p className="text-gray-600">The dedicated professionals driving CampusOps forward.</p>
+          <div className="text-center mb-16">
+            <span className="text-blue-600 font-bold uppercase tracking-wider text-sm mb-2 block">Leadership</span>
+            <h3 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">Meet the Team</h3>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">The dedicated professionals driving CampusOps forward.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="w-24 h-24 mx-auto mb-4 bg-gray-200 rounded-full overflow-hidden border-4 border-white shadow-md flex justify-center items-center text-gray-400">
-                  <Users className="w-10 h-10" />
+              <div key={idx} className="bg-white rounded-[2rem] p-8 text-center border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_15px_35px_rgba(13,93,216,0.12)] transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full overflow-hidden border-[6px] border-white shadow-[0_8px_20px_rgb(0,0,0,0.08)] flex justify-center items-center text-gray-400 group-hover:from-blue-50 group-hover:to-blue-100 transition-colors duration-300 relative">
+                    <Users className="w-12 h-12 group-hover:scale-110 transition-transform duration-300 group-hover:text-blue-500" />
+                  </div>
+                  <h4 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">{member.name}</h4>
+                  <p className="text-blue-700 font-semibold text-xs tracking-wider uppercase px-4 py-2 bg-blue-50/80 rounded-full inline-block border border-blue-100/50">{member.role}</p>
                 </div>
-                <h4 className="text-xl font-bold text-gray-900">{member.name}</h4>
-                <p className="text-blue-600 font-medium">{member.role}</p>
               </div>
             ))}
           </div>
@@ -180,34 +193,67 @@ function Home() {
               </form>
             </div>
 
-            {/* Contact Details & Map */}
+            {/* Contact Details Section Replacing Map Placeholder */}
             <div className="lg:pl-10 flex flex-col gap-8">
-              <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
-                <div className="p-4 bg-white text-blue-600 rounded-2xl shadow-sm"><MapPin className="w-6 h-6" /></div>
-                <div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-1">Campus Address</h4>
-                  <p className="text-gray-600 leading-relaxed">123 University Avenue, Innovation Block<br/>Tech District, ST 90210</p>
+              <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_15px_35px_rgba(13,93,216,0.12)] transition-all duration-300 hover:-translate-y-1 group">
+                <div className="flex items-start gap-5">
+                  <div className="p-4 bg-white text-blue-600 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.05)] group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <MapPin className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-2">Campus Address</h4>
+                    <p className="text-gray-600 leading-relaxed text-lg">New Kandy Road, Malabe, Sri Lanka<br/><span className="text-gray-500 text-sm">(Postal Code 10115)</span></p>
+                  </div>
                 </div>
               </div>
               
               <div className="grid sm:grid-cols-2 gap-8">
-                <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 flex items-center justify-center bg-white text-blue-600 rounded-xl shadow-sm mb-4"><Phone className="w-5 h-5" /></div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-1">Phone</h4>
-                  <p className="text-gray-600">+1 (555) 123-4567</p>
+                <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_15px_35px_rgba(13,93,216,0.12)] transition-all duration-300 hover:-translate-y-1 group">
+                  <div className="w-14 h-14 flex items-center justify-center bg-white text-blue-600 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.05)] mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <Phone className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-xl font-bold text-gray-900 mb-2">Phone</h4>
+                  <p className="text-gray-600 text-lg font-medium">+94 11 754 4801</p>
                 </div>
-                <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 flex items-center justify-center bg-white text-blue-600 rounded-xl shadow-sm mb-4"><Mail className="w-5 h-5" /></div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-1">Email</h4>
-                  <p className="text-gray-600">support@campusops.edu</p>
+                <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_15px_35px_rgba(13,93,216,0.12)] transition-all duration-300 hover:-translate-y-1 group">
+                  <div className="w-14 h-14 flex items-center justify-center bg-white text-blue-600 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.05)] mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-xl font-bold text-gray-900 mb-2">Email</h4>
+                  <a href="mailto:international.admissions@sliit.lk" className="text-blue-600 font-medium hover:underline break-all text-sm sm:text-base">
+                    international.admissions<wbr/>@sliit.lk
+                  </a>
                 </div>
               </div>
 
-              {/* Map Placeholder */}
-              <div className="h-48 rounded-3xl bg-gray-200 border-2 border-dashed border-gray-300 flex flex-col justify-center items-center text-gray-500 relative overflow-hidden group">
-                <Map className="w-8 h-8 mb-2 group-hover:scale-110 transition-transform" />
-                <span className="font-semibold px-4 text-center">Interactive Map Placeholder</span>
-                <div className="absolute inset-0 bg-blue-500/5 mix-blend-overlay"></div>
+              {/* Information Card Section Replacing Map */}
+              <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-blue-800 rounded-3xl p-10 border border-blue-500 shadow-[0_15px_30px_rgba(13,93,216,0.2)] text-white relative overflow-hidden group">
+                <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity duration-300 transform group-hover:scale-110">
+                  <Clock className="w-24 h-24 text-white" />
+                </div>
+                <div className="relative z-10">
+                  <h4 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                    <div className="p-2.5 bg-blue-500/30 rounded-xl border border-blue-400/30 backdrop-blur-sm shadow-sm group-hover:scale-110 transition-transform duration-300">
+                      <Clock className="w-6 h-6 text-blue-50" />
+                    </div>
+                    Support Information
+                  </h4>
+                  <div className="space-y-5 text-blue-50/90 text-lg">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-blue-500/40 pb-4 gap-2">
+                      <span className="font-medium text-blue-200">Office Hours</span>
+                      <span className="font-bold text-white tracking-wide bg-blue-900/50 px-3 py-1 rounded-lg border border-blue-800/50 text-base text-center">8:00 AM - 5:30 PM (Mon-Fri)</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-blue-500/40 pb-4 gap-2 mt-4">
+                      <span className="font-medium text-blue-200">Support Availability</span>
+                      <span className="font-bold text-white tracking-wide bg-blue-900/50 px-3 py-1 rounded-lg border border-blue-800/50 text-base text-center">24/7 Online Ticketing</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 mt-4 gap-2">
+                      <span className="font-medium text-blue-200">Campus Help Desk</span>
+                      <span className="font-bold text-white tracking-wide text-base">IT Building, 1st Floor</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

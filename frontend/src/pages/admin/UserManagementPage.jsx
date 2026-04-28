@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Search, ShieldAlert, UserPlus } from 'lucide-react';
 import TopBar from '../../Components/layout/TopBar';
 import Sidebar from '../../Components/layout/Sidebar';
@@ -8,7 +8,7 @@ import CreateUserModal from '../../Components/admin/CreateUserModal';
 import Toast from '../../Components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { userApi } from '../../api/userApi';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../Components/context/AuthContext';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);

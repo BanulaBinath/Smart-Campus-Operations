@@ -52,7 +52,7 @@ public class Booking {
     private String resourceType;
 
     // ── When ──────────────────────────────────────────────────────────────────
-    @Column(nullable = false)
+    @Column(name = "booking_date", nullable = false)
     private LocalDate date;
 
     @Column(name = "start_time", nullable = false)

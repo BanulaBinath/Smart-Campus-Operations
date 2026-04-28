@@ -7,7 +7,7 @@ import {
   rejectBooking,
   cancelBooking,
   deleteBooking,
-} from '../services/bookingService';
+} from '../../services/bookingService';
 
 const BookingContext = createContext(null);
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
+﻿import React from 'react';
+import { useAuth } from '../Components/context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { GraduationCap } from 'lucide-react';
 

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react';
+﻿import React, { useEffect, useState, useMemo } from 'react';
 import TopBar from '../../Components/layout/TopBar';
 import Sidebar from '../../Components/layout/Sidebar';
 import { getAllFacilities } from '../../services/facilityService';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../Components/context/AuthContext';
 
 const StudentFacilitiesPage = () => {
   const [facilities, setFacilities] = useState([]);

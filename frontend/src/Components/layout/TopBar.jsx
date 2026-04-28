@@ -1,6 +1,6 @@
-import React from 'react';
+﻿import React from 'react';
 import NotificationBell from '../notifications/NotificationBell';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * @param {Object} props

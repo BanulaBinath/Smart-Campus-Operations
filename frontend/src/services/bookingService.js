@@ -1,4 +1,5 @@
 ﻿const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8080/api/v1';
+const FACILITY_BASE = 'http://localhost:8080/api/facilities';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -75,9 +76,9 @@ export const deleteBooking = (id) =>
     credentials: 'include',
   }).then(handleResponse);
 
+// Uses teammate's endpoint - no /v1/
 export const getFacilities = (params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  return fetch(`${API_BASE}/facilities${query ? `?${query}` : ''}`, {
+  return fetch(FACILITY_BASE, {
     headers: getAuthHeaders(),
     credentials: 'include',
   }).then(handleResponse);

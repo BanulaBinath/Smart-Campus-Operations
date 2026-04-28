@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import TopBar from '../../Components/layout/TopBar';
 import Sidebar from '../../Components/layout/Sidebar';
 import Facility from '../../Components/admin/Facility';
 import AddFacility from '../../Components/admin/addFacility';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../Components/context/AuthContext';
 
 const FacilitiesPage = () => {
   const { user } = useAuth();

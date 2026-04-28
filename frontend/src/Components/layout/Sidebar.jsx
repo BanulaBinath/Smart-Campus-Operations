@@ -1,6 +1,6 @@
-import React from 'react';
+﻿import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
   Building2,
@@ -20,33 +20,49 @@ const Sidebar = () => {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   ];
 
+  // Facilities (role-based)
   if (user?.role === 'ADMIN' || user?.role === 'TECHNICIAN') {
     navItems.push({ name: 'Facilities', path: '/facilities', icon: Building2 });
-  } else if (user?.role === 'STUDENT' || user?.role === 'USER' || user?.role === 'LECTURER') {
+  } else if (
+    user?.role === 'STUDENT' ||
+    user?.role === 'USER' ||
+    user?.role === 'LECTURER'
+  ) {
     navItems.push({ name: 'Facilities', path: '/student/facilities', icon: Building2 });
   }
 
+  // Bookings (role-based)
+  if (user?.role === 'ADMIN') {
+    navItems.push({ name: 'Admin Bookings', path: '/admin/bookings', icon: CalendarCheck });
+  } else {
+    navItems.push({ name: 'Bookings', path: '/bookings', icon: CalendarCheck });
+  }
+
+  // Common modules
   navItems.push(
-    { name: 'Bookings', path: '/bookings', icon: CalendarCheck }, // Module B stub
-    { name: 'Incidents', path: '/incidents', icon: AlertTriangle }, // Module C stub
+    { name: 'Incidents', path: '/incidents', icon: AlertTriangle },
     { name: 'Notifications', path: '/notifications', icon: Bell }
   );
 
+  // Admin-only
   if (user?.role === 'ADMIN') {
     navItems.push({ name: 'Users', path: '/admin/users', icon: Users });
   }
 
   return (
     <div className="fixed left-0 top-0 hidden h-full w-[240px] flex-col bg-[var(--color-sidebar-bg)] text-[var(--color-sidebar-text)] md:flex shadow-xl z-40">
-      {/* Logo Area */}
+      
+      {/* Logo */}
       <div className="flex h-16 items-center justify-center border-b border-white/10 gap-2 px-4">
         <div className="flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-1.5 shadow-md">
           <GraduationCap size={24} className="text-white" />
         </div>
-        <span className="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">CampusOps</span>
+        <span className="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+          CampusOps
+        </span>
       </div>
 
-      {/* Nav Links */}
+      {/* Navigation */}
       <div className="flex-1 overflow-y-auto py-6 px-3">
         <ul className="space-y-2">
           {navItems.map((item) => (
@@ -69,21 +85,22 @@ const Sidebar = () => {
         </ul>
       </div>
 
-      {/* Bottom Profile Area */}
+      {/* Bottom Profile */}
       <div className="border-t border-white/10 p-4">
         <NavLink
-            to="/profile"
-            className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors mb-2 ${
-                isActive
-                  ? 'bg-[var(--color-sidebar-active)] text-white font-medium'
-                  : 'hover:bg-[var(--color-sidebar-hover)] hover:text-white'
-              }`
-            }
-          >
-            <UserCircle size={20} />
-            <span>Profile</span>
-          </NavLink>
+          to="/profile"
+          className={({ isActive }) =>
+            `flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors mb-2 ${
+              isActive
+                ? 'bg-[var(--color-sidebar-active)] text-white font-medium'
+                : 'hover:bg-[var(--color-sidebar-hover)] hover:text-white'
+            }`
+          }
+        >
+          <UserCircle size={20} />
+          <span>Profile</span>
+        </NavLink>
+
         <div className="flex items-center justify-between gap-3 px-3 py-2 bg-white/5 rounded-lg border border-white/10">
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-primary)] text-sm font-bold text-white shrink-0">
@@ -94,6 +111,7 @@ const Sidebar = () => {
               <span className="text-xs text-[var(--color-sidebar-text)] truncate">{user?.role}</span>
             </div>
           </div>
+
           <button
             onClick={logout}
             className="text-[var(--color-sidebar-text)] hover:text-[var(--color-danger-light)] transition-colors shrink-0"

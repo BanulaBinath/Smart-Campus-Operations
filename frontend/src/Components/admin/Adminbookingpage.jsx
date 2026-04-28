@@ -1,9 +1,9 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { BookingProvider, useBooking } from '../../context/BookingContext';
+import { BookingProvider, useBooking } from '../context/BookingContext';
 import TopBar from '../layout/TopBar';
 import Sidebar from '../layout/Sidebar';
-import BookingCard from '../../Components/booking/BookingCard';
-import RejectModal from '../../Components/booking/RejectModal';
+import BookingCard from '../booking/BookingCard';
+import RejectModal from '../booking/RejectModal';
 
 const STATUS_FILTERS = ['ALL', 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
 
@@ -66,7 +66,6 @@ const AdminBookingsInner = () => {
     }
   };
 
-  // Filter + search
   const filtered = bookings
     .filter((b) => statusFilter === 'ALL' || b.status === statusFilter)
     .filter((b) => {
@@ -79,123 +78,128 @@ const AdminBookingsInner = () => {
       );
     });
 
-  // Summary counts
   const counts = STATUS_FILTERS.slice(1).reduce((acc, s) => {
     acc[s] = bookings.filter((b) => b.status === s).length;
     return acc;
   }, {});
 
   return (
-    <div style={styles.page}>
-      {/* Toast */}
-      {toast && (
-        <div
-          style={{
-            ...styles.toast,
-            background: toast.type === 'error' ? '#EF4444' : '#10B981',
-          }}
-        >
-          {toast.msg}
-        </div>
-      )}
+    <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <Sidebar />
+      <div className="flex flex-1 flex-col md:ml-[240px]">
+        <TopBar title="Booking Management" />
+        <main className="flex-1 overflow-y-auto px-6 py-8">
 
-      {/* Header */}
-      <div style={styles.header}>
-        <div>
-          <h1 style={styles.pageTitle}>Booking Management</h1>
-          <p style={styles.pageSubtitle}>Review, approve, and manage all booking requests</p>
-        </div>
-      </div>
-
-      {/* Summary cards */}
-      <div style={styles.summaryRow}>
-        {[
-          { label: 'Pending',   count: counts.PENDING,   color: '#F59E0B', bg: '#FEF3C7' },
-          { label: 'Approved',  count: counts.APPROVED,  color: '#10B981', bg: '#D1FAE5' },
-          { label: 'Rejected',  count: counts.REJECTED,  color: '#EF4444', bg: '#FEE2E2' },
-          { label: 'Cancelled', count: counts.CANCELLED, color: '#9CA3AF', bg: '#F3F4F6' },
-        ].map((s) => (
-          <div key={s.label} style={{ ...styles.summaryCard, background: s.bg }}>
-            <p style={{ ...styles.summaryCount, color: s.color }}>{s.count}</p>
-            <p style={styles.summaryLabel}>{s.label}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Controls */}
-      <div style={styles.controls}>
-        <div style={styles.filterBar}>
-          {STATUS_FILTERS.map((s) => (
-            <button
-              key={s}
-              style={{
-                ...styles.filterBtn,
-                ...(statusFilter === s ? styles.filterBtnActive : {}),
-              }}
-              onClick={() => setStatusFilter(s)}
-            >
-              {s === 'ALL' ? 'All' : s.charAt(0) + s.slice(1).toLowerCase()}
-              {s !== 'ALL' && counts[s] > 0 && (
-                <span style={styles.badge}>{counts[s]}</span>
-              )}
-            </button>
-          ))}
-        </div>
-        <input
-          style={styles.searchInput}
-          placeholder="Search by facility, user, purpose…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      {/* Error */}
-      {error && <div style={styles.errorBanner}>{error}</div>}
-
-      {/* Grid */}
-      {loading ? (
-        <div style={styles.center}>
-          <div style={styles.spinner} />
-          <p style={{ color: '#9CA3AF', marginTop: 12 }}>Loading bookings…</p>
-        </div>
-      ) : filtered.length === 0 ? (
-        <div style={styles.empty}>
-          <p style={styles.emptyIcon}>📋</p>
-          <p style={styles.emptyTitle}>No bookings found</p>
-          <p style={styles.emptyHint}>Try adjusting the filters or search query.</p>
-        </div>
-      ) : (
-        <div style={styles.grid}>
-          {filtered.map((b) => (
-            <div key={b.id} style={{ position: 'relative' }}>
-              <BookingCard
-                booking={b}
-                isAdmin
-                onApprove={onApprove}
-                onReject={onReject}
-                onCancel={() => {}}
-              />
-              <button
-                style={styles.deleteBtn}
-                title="Delete record"
-                onClick={() => onDelete(b.id)}
-              >
-                🗑
-              </button>
+          {/* Toast */}
+          {toast && (
+            <div style={{
+              ...styles.toast,
+              background: toast.type === 'error' ? '#EF4444' : '#10B981',
+            }}>
+              {toast.msg}
             </div>
-          ))}
-        </div>
-      )}
+          )}
 
-      {/* Reject modal */}
-      {rejectTarget && (
-        <RejectModal
-          booking={rejectTarget}
-          onConfirm={onConfirmReject}
-          onCancel={() => setRejectTarget(null)}
-          loading={actionLoading}
-        />
-      )}
+          {/* Header */}
+          <div style={styles.header}>
+            <div>
+              <h1 style={styles.pageTitle}>Booking Management</h1>
+              <p style={styles.pageSubtitle}>Review, approve, and manage all booking requests</p>
+            </div>
+          </div>
+
+          {/* Summary cards */}
+          <div style={styles.summaryRow}>
+            {[
+              { label: 'Pending',   count: counts.PENDING,   color: '#F59E0B', bg: '#FEF3C7' },
+              { label: 'Approved',  count: counts.APPROVED,  color: '#10B981', bg: '#D1FAE5' },
+              { label: 'Rejected',  count: counts.REJECTED,  color: '#EF4444', bg: '#FEE2E2' },
+              { label: 'Cancelled', count: counts.CANCELLED, color: '#9CA3AF', bg: '#F3F4F6' },
+            ].map((s) => (
+              <div key={s.label} style={{ ...styles.summaryCard, background: s.bg }}>
+                <p style={{ ...styles.summaryCount, color: s.color }}>{s.count}</p>
+                <p style={styles.summaryLabel}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Controls */}
+          <div style={styles.controls}>
+            <div style={styles.filterBar}>
+              {STATUS_FILTERS.map((s) => (
+                <button
+                  key={s}
+                  style={{
+                    ...styles.filterBtn,
+                    ...(statusFilter === s ? styles.filterBtnActive : {}),
+                  }}
+                  onClick={() => setStatusFilter(s)}
+                >
+                  {s === 'ALL' ? 'All' : s.charAt(0) + s.slice(1).toLowerCase()}
+                  {s !== 'ALL' && counts[s] > 0 && (
+                    <span style={styles.badge}>{counts[s]}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+            <input
+              style={styles.searchInput}
+              placeholder="Search by facility, user, purpose…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          {/* Error */}
+          {error && <div style={styles.errorBanner}>{error}</div>}
+
+          {/* Grid */}
+          {loading ? (
+            <div style={styles.center}>
+              <div style={styles.spinner} />
+              <p style={{ color: '#9CA3AF', marginTop: 12 }}>Loading bookings…</p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div style={styles.empty}>
+              <p style={styles.emptyIcon}>📋</p>
+              <p style={styles.emptyTitle}>No bookings found</p>
+              <p style={styles.emptyHint}>Try adjusting the filters or search query.</p>
+            </div>
+          ) : (
+            <div style={styles.grid}>
+              {filtered.map((b) => (
+                <div key={b.id} style={{ position: 'relative' }}>
+                  <BookingCard
+                    booking={b}
+                    isAdmin
+                    onApprove={onApprove}
+                    onReject={onReject}
+                    onCancel={() => {}}
+                  />
+                  <button
+                    style={styles.deleteBtn}
+                    title="Delete record"
+                    onClick={() => onDelete(b.id)}
+                  >
+                    🗑
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Reject modal */}
+          {rejectTarget && (
+            <RejectModal
+              booking={rejectTarget}
+              onConfirm={onConfirmReject}
+              onCancel={() => setRejectTarget(null)}
+              loading={actionLoading}
+            />
+          )}
+
+        </main>
+      </div>
     </div>
   );
 };
@@ -207,10 +211,6 @@ const AdminBookingsPage = () => (
 );
 
 const styles = {
-  page: {
-    minHeight: '100vh', background: '#F9FAFB',
-    padding: '32px 24px', fontFamily: "'Inter', sans-serif",
-  },
   toast: {
     position: 'fixed', top: 20, right: 20,
     padding: '12px 20px', borderRadius: 10,

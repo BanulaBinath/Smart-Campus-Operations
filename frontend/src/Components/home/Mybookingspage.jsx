@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { BookingProvider, useBooking } from '../../context/BookingContext';
+import { BookingProvider, useBooking } from '../context/BookingContext';
 import TopBar from '../layout/TopBar';
 import Sidebar from '../layout/Sidebar';
 import BookingCard from '../booking/BookingCard';

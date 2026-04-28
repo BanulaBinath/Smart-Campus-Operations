@@ -24,7 +24,6 @@ function Login() {
     );
   }
 
-  // If already logged in via context, redirect to home/dashboard
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -45,7 +44,6 @@ function Login() {
         password: formData.password
       });
 
-      // Fetch the current user to update the global AuthContext state
       await fetchCurrentUser();
     } catch (err) {
       setError(err.response?.data?.message || err.response?.data?.error || 'Login failed. Please check your credentials.');
@@ -55,7 +53,7 @@ function Login() {
   };
 
   return (
-    <div className="auth-page">
+    <div className="auth-page font-sans text-gray-800">
       <Nav />
       <main className="auth-main" id="about">
         <section className="auth-card">

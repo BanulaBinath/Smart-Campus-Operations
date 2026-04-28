@@ -27,7 +27,6 @@ function SignUp() {
     );
   }
 
-  // If already logged in via context, redirect to home/dashboard
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -60,11 +59,11 @@ function SignUp() {
   };
 
   return (
-    <div className="signup-page">
+    <div className="signup-page font-sans text-gray-800">
       <Nav />
       <main className="signup-main" id="about">
         <section className="signup-card">
-          <h1 style={{ fontWeight: '800', letterSpacing: '-0.02em', color: '#1a56db' }}>Create Your Account</h1>
+          <h1>Create Your Account</h1>
           <p>Join CampusOps and start booking facilities in seconds.</p>
 
           {error && <div className="mb-4 text-sm font-medium text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">{error}</div>}
@@ -141,5 +140,3 @@ function SignUp() {
 }
 
 export default SignUp;
-
-  

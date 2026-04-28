@@ -3,6 +3,10 @@ import { useState, useCallback } from 'react';
 export const useToast = () => {
   const [toasts, setToasts] = useState([]);
 
+  const removeToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  }, []);
+
   const addToast = useCallback((message, type = 'info') => {
     const id = Date.now().toString();
     setToasts((prev) => [...prev, { id, message, type }]);
@@ -11,11 +15,7 @@ export const useToast = () => {
     setTimeout(() => {
       removeToast(id);
     }, 4000);
-  }, []);
-
-  const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  }, []);
+  }, [removeToast]);
 
   const success = useCallback((message) => addToast(message, 'success'), [addToast]);
   const error = useCallback((message) => addToast(message, 'error'), [addToast]);

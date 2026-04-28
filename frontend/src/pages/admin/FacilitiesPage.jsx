@@ -3,7 +3,7 @@ import TopBar from '../../components/layout/TopBar';
 import Sidebar from '../../components/layout/Sidebar';
 import Facility from '../../components/admin/Facility';
 import AddFacility from '../../components/admin/addFacility';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../components/context/AuthContext';
 
 const FacilitiesPage = () => {
   const { user } = useAuth();

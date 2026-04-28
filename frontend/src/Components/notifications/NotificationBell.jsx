@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Bell } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+
 import { notificationApi } from '../../api/notificationApi';
 import NotificationItem from './NotificationItem';
 

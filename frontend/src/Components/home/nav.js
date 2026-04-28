@@ -29,9 +29,9 @@ function Nav() {
         <div className="hidden md:flex items-center gap-8">
           <div className="flex gap-6 items-center">
             <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Home</Link>
-            <a href="/#about" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">About Us</a>
-            <a href="/#facilities" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Facilities</a>
-            <a href="/#contact" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Contact Us</a>
+            <Link to="/#about" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">About Us</Link>
+            <Link to="/#facilities" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Facilities</Link>
+            <Link to="/#contact" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Contact Us</Link>
           </div>
           <div className="flex items-center gap-4 border-l border-gray-200 pl-8">
             <Link to="/login" className="text-gray-700 font-bold hover:text-blue-600 transition-colors">Login</Link>
@@ -52,9 +52,9 @@ function Nav() {
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg py-4 px-6 flex flex-col gap-4 animate-in slide-in-from-top-2">
           <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-gray-700 hover:text-blue-600">Home</Link>
-          <a href="/#about" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-gray-700 hover:text-blue-600">About Us</a>
-          <a href="/#facilities" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-gray-700 hover:text-blue-600">Facilities</a>
-          <a href="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-gray-700 hover:text-blue-600">Contact Us</a>
+          <Link to="/#about" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-gray-700 hover:text-blue-600">About Us</Link>
+          <Link to="/#facilities" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-gray-700 hover:text-blue-600">Facilities</Link>
+          <Link to="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-gray-700 hover:text-blue-600">Contact Us</Link>
           <hr className="my-2 border-gray-100" />
           <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-700 hover:text-blue-600">Login</Link>
           <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)} className="w-full text-center py-3 bg-blue-600 text-white font-bold rounded-lg mt-2">Sign Up</Link>

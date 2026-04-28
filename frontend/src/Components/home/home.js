@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, Flag, Target, MapPin, Mail, Phone, CalendarCheck, Monitor, Map, Clock } from 'lucide-react';
+import { BookOpen, Users, Flag, Target, MapPin, Mail, Phone, Clock } from 'lucide-react';
 import Nav from './nav';
 import Footer from './footer';
 import './home.css';

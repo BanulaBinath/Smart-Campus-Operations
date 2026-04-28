@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import TopBar from '../../components/layout/TopBar';
 import Sidebar from '../../components/layout/Sidebar';
 import { getAllFacilities } from '../../services/facilityService';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../components/context/AuthContext';
 
 const StudentFacilitiesPage = () => {
   const [facilities, setFacilities] = useState([]);

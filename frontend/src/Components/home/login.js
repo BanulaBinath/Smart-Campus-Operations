@@ -5,7 +5,7 @@ import Nav from './nav';
 import Footer from './footer';
 import './login.css';
 
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const { isAuthenticated, loading, fetchCurrentUser } = useAuth();

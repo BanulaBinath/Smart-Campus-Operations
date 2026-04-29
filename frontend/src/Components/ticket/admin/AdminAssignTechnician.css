@@ -1,0 +1,77 @@
+.admin-assign-page {
+  padding: 0;
+}
+
+.admin-assign-topbar {
+  margin-bottom: 12px;
+}
+
+.admin-assign-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.admin-assign-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.admin-assign-subtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.admin-assign-form {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-assign-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-assign-select {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.admin-assign-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-border-focus);
+}
+
+.admin-assign-btn {
+  margin-top: 6px;
+  align-self: flex-start;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 0;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-assign-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.admin-assign-btn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}

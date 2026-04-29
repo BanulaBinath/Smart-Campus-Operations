@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import DashboardLayout from './DashboardLayout';
+import { useAuth } from '../../context/AuthContext';
+import TopBar from '../layout/TopBar';
+import Sidebar from '../layout/Sidebar';
 import './CreateTicket.css';
 
 const API_BASE_URL = 'http://localhost:8080/api/tickets';
 
 function CreateTicket() {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     location: '',
     category: '',
@@ -67,6 +70,11 @@ function CreateTicket() {
     setIsSubmitting(true);
 
     try {
+      if (!user?.email) {
+        setErrorMessage('Could not determine your account email. Please re-login.');
+        return;
+      }
+
       const ticketPayload = {
         title: formData.category || 'Maintenance Issue',
         location: formData.location,
@@ -74,7 +82,7 @@ function CreateTicket() {
         description: formData.description,
         priority: formData.priority,
         contactDetails: formData.contactDetails,
-        createdBy: 'user@example.com'
+        createdBy: user.email
       };
 
       const ticketResponse = await fetch(API_BASE_URL, {
@@ -113,106 +121,112 @@ function CreateTicket() {
   };
 
   return (
-    <DashboardLayout role="USER">
-      <section className="create-ticket-box">
-        <div className="create-ticket-header">
-          <h1>Create Ticket</h1>
-          <p>Submit a maintenance issue with the required details for faster resolution.</p>
-        </div>
-
-        <form className="create-ticket-form" onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Location</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                placeholder="Enter resource or location"
-                required
-              />
+    <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <Sidebar />
+      <div className="flex flex-1 flex-col md:ml-[240px]">
+        <TopBar title="Create Ticket" />
+        <main className="flex-1 overflow-y-auto px-6 py-8">
+          <section className="create-ticket-box max-w-6xl mx-auto">
+            <div className="create-ticket-header">
+              <h1>Create Ticket</h1>
+              <p>Submit a maintenance issue with the required details for faster resolution.</p>
             </div>
 
-            <div className="form-group">
-              <label>Category</label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select category</option>
-                <option value="Projector Issue">Projector Issue</option>
-                <option value="Air Conditioning">Air Conditioning</option>
-                <option value="Electrical">Electrical</option>
-                <option value="Furniture Damage">Furniture Damage</option>
-                <option value="Cleaning Issue">Cleaning Issue</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
+            <form className="create-ticket-form" onSubmit={handleSubmit}>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="Enter resource or location"
+                    required
+                  />
+                </div>
 
-            <div className="form-group">
-              <label>Priority</label>
-              <select
-                name="priority"
-                value={formData.priority}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select priority</option>
-                <option value="LOW">LOW</option>
-                <option value="MEDIUM">MEDIUM</option>
-                <option value="HIGH">HIGH</option>
-                <option value="URGENT">URGENT</option>
-              </select>
-            </div>
+                <div className="form-group">
+                  <label>Category</label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select category</option>
+                    <option value="Projector Issue">Projector Issue</option>
+                    <option value="Air Conditioning">Air Conditioning</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Furniture Damage">Furniture Damage</option>
+                    <option value="Cleaning Issue">Cleaning Issue</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
 
-            <div className="form-group">
-              <label>Contact Details</label>
-              <input
-                type="text"
-                name="contactDetails"
-                value={formData.contactDetails}
-                onChange={handleChange}
-                placeholder="Enter phone number or email"
-                required
-              />
-            </div>
-          </div>
+                <div className="form-group">
+                  <label>Priority</label>
+                  <select
+                    name="priority"
+                    value={formData.priority}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select priority</option>
+                    <option value="LOW">LOW</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HIGH">HIGH</option>
+                    <option value="URGENT">URGENT</option>
+                  </select>
+                </div>
 
-          <div className="form-group">
-            <label>Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Describe the issue clearly"
-              rows="6"
-              required
-            ></textarea>
-          </div>
+                <div className="form-group">
+                  <label>Contact Details</label>
+                  <input
+                    type="text"
+                    name="contactDetails"
+                    value={formData.contactDetails}
+                    onChange={handleChange}
+                    placeholder="Enter phone number or email"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div className="form-group">
-            <label>Upload Images</label>
-            <input
-              type="file"
-              name="images"
-              accept="image/*"
-              multiple
-              onChange={handleChange}
-            />
-          </div>
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe the issue clearly"
+                  rows="6"
+                  required
+                ></textarea>
+              </div>
 
-          {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
-          {successMessage && <p className="form-message success-message">{successMessage}</p>}
+              <div className="form-group">
+                <label>Upload Images</label>
+                <input
+                  type="file"
+                  name="images"
+                  accept="image/*"
+                  multiple
+                  onChange={handleChange}
+                />
+              </div>
 
-          <button type="submit" className="submit-ticket-btn" disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting...' : 'Submit'}
-          </button>
-        </form>
-      </section>
-    </DashboardLayout>
+              {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
+              {successMessage && <p className="form-message success-message">{successMessage}</p>}
+
+              <button type="submit" className="submit-ticket-btn" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </button>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
   );
 }
 

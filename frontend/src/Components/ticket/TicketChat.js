@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import DashboardLayout from './DashboardLayout';
+import TopBar from '../layout/TopBar';
+import Sidebar from '../layout/Sidebar';
+import { useAuth } from '../../context/AuthContext';
 import './TicketChat.css';
 
 const API_BASE_URL = 'http://localhost:8080/api/tickets';
-const CURRENT_USER = 'user@example.com';
 
 function TicketChat({ role = 'USER' }) {
   const { ticketId } = useParams();
+  const { user } = useAuth();
+  const currentUserEmail = user?.email || '';
+  const currentUserRole = user?.role || role;
 
   const [ticket, setTicket] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -65,7 +69,7 @@ function TicketChat({ role = 'USER' }) {
           },
           body: JSON.stringify({
             message: newMessage,
-            requestedBy: CURRENT_USER
+            requestedBy: currentUserEmail
           })
         });
 
@@ -90,8 +94,8 @@ function TicketChat({ role = 'USER' }) {
         },
         body: JSON.stringify({
           message: newMessage,
-          createdBy: CURRENT_USER,
-          createdByRole: role
+          createdBy: currentUserEmail,
+          createdByRole: currentUserRole
         })
       });
 
@@ -118,7 +122,7 @@ function TicketChat({ role = 'USER' }) {
       setErrorMessage('');
 
       const response = await fetch(
-        `${API_BASE_URL}/comments/${id}?requestedBy=${encodeURIComponent(CURRENT_USER)}`,
+        `${API_BASE_URL}/comments/${id}?requestedBy=${encodeURIComponent(currentUserEmail)}`,
         {
           method: 'DELETE'
         }
@@ -137,96 +141,118 @@ function TicketChat({ role = 'USER' }) {
 
   if (loading) {
     return (
-      <DashboardLayout role={role}>
-        <section className="ticket-chat-page">
-          <p>Loading ticket...</p>
-        </section>
-      </DashboardLayout>
+      <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+        <Sidebar />
+        <div className="flex flex-1 flex-col md:ml-[240px]">
+          <TopBar title="Ticket Chat" />
+          <main className="flex-1 overflow-y-auto px-6 py-8">
+            <section className="ticket-chat-page max-w-6xl mx-auto">
+              <p>Loading ticket...</p>
+            </section>
+          </main>
+        </div>
+      </div>
     );
   }
 
   if (!ticket) {
     return (
-      <DashboardLayout role={role}>
-        <section className="ticket-chat-page">
-          <div className="ticket-chat-empty-state">
-            <h1>Comments</h1>
-            <p>Choose a ticket to start conversation.</p>
-          </div>
-        </section>
-      </DashboardLayout>
+      <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+        <Sidebar />
+        <div className="flex flex-1 flex-col md:ml-[240px]">
+          <TopBar title="Ticket Chat" />
+          <main className="flex-1 overflow-y-auto px-6 py-8">
+            <section className="ticket-chat-page max-w-6xl mx-auto">
+              <div className="ticket-chat-empty-state">
+                <h1>Comments</h1>
+                <p>Choose a ticket to start conversation.</p>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout role={role}>
-      <section className="ticket-chat-page">
-        <div className="ticket-chat-header">
-          <div>
-            <h1>Ticket Chat</h1>
-            <p>
-              Ticket ID: {ticket.id} | {ticket.location} | {ticket.category}
-            </p>
-          </div>
-
-          <span className="chat-status-badge">{ticket.status}</span>
-        </div>
-
-        {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
-
-        <div className="chat-box">
-          <div className="chat-messages">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`chat-bubble-row ${message.createdBy === CURRENT_USER ? 'own-row' : 'other-row'}`}
-              >
-                <div
-                  className={`chat-bubble ${message.createdBy === CURRENT_USER ? 'own-bubble' : 'other-bubble'}`}
-                >
-                  <div className="chat-bubble-top">
-                    <span className="chat-sender">{message.createdBy || 'User'}</span>
-                    <span className="chat-time">
-                      {message.createdAt ? new Date(message.createdAt).toLocaleString() : ''}
-                    </span>
-                  </div>
-
-                  <p>{message.message}</p>
-
-                  {message.createdBy === CURRENT_USER && (
-                    <div className="chat-actions">
-                      <button type="button" onClick={() => handleEdit(message)}>
-                        Edit
-                      </button>
-                      <button type="button" onClick={() => handleDelete(message.id)}>
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </div>
+    <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <Sidebar />
+      <div className="flex flex-1 flex-col md:ml-[240px]">
+        <TopBar title="Ticket Chat" />
+        <main className="flex-1 overflow-y-auto px-6 py-8">
+          <section className="ticket-chat-page max-w-6xl mx-auto">
+            <div className="ticket-chat-header">
+              <div>
+                <h1>Ticket Chat</h1>
+                <p>
+                  Ticket ID: {ticket.id} | {ticket.location} | {ticket.category}
+                </p>
               </div>
-            ))}
-          </div>
 
-          <div className="chat-input-area">
-            <textarea
-              placeholder="Type your message here..."
-              rows="3"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-            ></textarea>
+              <span className="chat-status-badge">{ticket.status}</span>
+            </div>
 
-            <button
-              type="button"
-              className="send-message-btn"
-              onClick={handleSend}
-            >
-              {editingId ? 'Update Message' : 'Send Message'}
-            </button>
-          </div>
-        </div>
-      </section>
-    </DashboardLayout>
+            {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
+
+            <div className="chat-box">
+              <div className="chat-messages">
+                {messages.map((message) => {
+                  const isOwnMessage = !!currentUserEmail && message.createdBy === currentUserEmail;
+
+                  return (
+                    <div
+                      key={message.id}
+                      className={`chat-bubble-row ${isOwnMessage ? 'own-row' : 'other-row'}`}
+                    >
+                      <div
+                        className={`chat-bubble ${isOwnMessage ? 'own-bubble' : 'other-bubble'}`}
+                      >
+                        <div className="chat-bubble-top">
+                          <span className="chat-sender">{message.createdBy || 'User'}</span>
+                          <span className="chat-time">
+                            {message.createdAt ? new Date(message.createdAt).toLocaleString() : ''}
+                          </span>
+                        </div>
+
+                        <p>{message.message}</p>
+
+                        {isOwnMessage && (
+                          <div className="chat-actions">
+                            <button type="button" onClick={() => handleEdit(message)}>
+                              Edit
+                            </button>
+                            <button type="button" onClick={() => handleDelete(message.id)}>
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="chat-input-area">
+                <textarea
+                  placeholder="Type your message here..."
+                  rows="3"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                ></textarea>
+
+                <button
+                  type="button"
+                  className="send-message-btn"
+                  onClick={handleSend}
+                >
+                  {editingId ? 'Update Message' : 'Send Message'}
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
   );
 }
 

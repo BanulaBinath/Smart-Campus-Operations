@@ -1,158 +1,116 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import DashboardLayout from '../DashboardLayout';
+import api from '../../../api/axios';
 import './AdminTechs.css';
 
 const API_BASE_URL = 'http://localhost:8080/api/tickets';
 
 function AdminTechs() {
-  const navigate = useNavigate();
-  const { id } = useParams();
-
-  const [technicians, setTechnicians] = useState([
-    { id: 1, name: 'tech1@example.com', role: 'IT Technician', activeTickets: 0, status: 'Available' },
-    { id: 2, name: 'tech2@example.com', role: 'Electrical Technician', activeTickets: 0, status: 'Available' },
-    { id: 3, name: 'tech3@example.com', role: 'Maintenance Technician', activeTickets: 0, status: 'Available' },
-    { id: 4, name: 'tech4@example.com', role: 'Network Technician', activeTickets: 0, status: 'Available' },
-  ]);
-
+  const [technicians, setTechnicians] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [assigningTech, setAssigningTech] = useState('');
 
   useEffect(() => {
-    const fetchTickets = async () => {
+    const loadData = async () => {
       try {
-        const response = await fetch(API_BASE_URL);
+        setLoading(true);
+        setErrorMessage('');
 
-        if (!response.ok) {
-          return;
-        }
+        const [usersResponse, ticketsResponse] = await Promise.all([
+          api.get('/users'),
+          fetch(API_BASE_URL),
+        ]);
 
-        const tickets = await response.json();
+        const users = Array.isArray(usersResponse.data) ? usersResponse.data : [];
+        const techUsers = users.filter((u) => u?.role === 'TECHNICIAN');
 
-        setTechnicians((prev) =>
-          prev.map((tech) => {
-            const activeCount = tickets.filter(
-              (ticket) =>
-                ticket.assignedTo === tech.name &&
-                ticket.status !== 'RESOLVED' &&
-                ticket.status !== 'CLOSED' &&
-                ticket.status !== 'REJECTED'
-            ).length;
+        const tickets = ticketsResponse.ok ? await ticketsResponse.json() : [];
 
-            return {
-              ...tech,
-              activeTickets: activeCount,
-              status: activeCount >= 3 ? 'Busy' : 'Available',
-            };
-          })
-        );
+        const computed = techUsers.map((tech) => {
+          const email = tech.email;
+          const activeCount = Array.isArray(tickets)
+            ? tickets.filter(
+                (ticket) =>
+                  ticket.assignedTo === email &&
+                  ticket.status !== 'RESOLVED' &&
+                  ticket.status !== 'CLOSED' &&
+                  ticket.status !== 'REJECTED'
+              ).length
+            : 0;
+
+          return {
+            id: tech.id,
+            name: email,
+            role: tech.role === 'TECHNICIAN' ? 'Technician' : tech.role,
+            activeTickets: activeCount,
+            status: activeCount >= 3 ? 'Busy' : 'Available',
+            displayName: tech.name || email,
+          };
+        });
+
+        setTechnicians(computed);
       } catch (error) {
+        console.error('Failed to load technicians:', error);
+        setErrorMessage('Failed to load technicians.');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchTickets();
+    loadData();
   }, []);
 
-  const handleAssign = async (techName) => {
-    if (!id) return;
-
-    try {
-      setAssigningTech(techName);
-      setErrorMessage('');
-      setSuccessMessage('');
-
-      const response = await fetch(`${API_BASE_URL}/${id}/assign`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          assignedTo: techName,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to assign technician.');
-      }
-
-      setSuccessMessage(`Assigned to ${techName} successfully.`);
-
-      setTimeout(() => {
-        navigate(`/admin/tickets/${id}`);
-      }, 700);
-    } catch (error) {
-      setErrorMessage(error.message || 'Something went wrong while assigning technician.');
-    } finally {
-      setAssigningTech('');
-    }
-  };
-
   return (
-    <DashboardLayout role="ADMIN">
-      <div className="admin-techs-page">
-        <div className="admin-techs-header">
-          <div>
-            <h2>{id ? 'Select a Technician' : 'Technician Management'}</h2>
-            <p>
-              {id
-                ? 'Choose a technician to assign for this ticket.'
-                : 'View technician roles and their current workload.'}
-            </p>
-          </div>
-
-          {id && (
-            <Link to={`/admin/tickets/${id}`} className="admin-techs-back-btn">
-              Back to Ticket
-            </Link>
-          )}
+    <div className="p-6">
+      {loading && (
+        <div className="flex justify-center p-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-primary)] border-t-transparent"></div>
         </div>
+      )}
 
-        {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
-        {successMessage && <p className="form-message success-message">{successMessage}</p>}
+      {errorMessage && (
+        <div className="p-4 mb-6 bg-red-50 border border-red-200 rounded-[8px] text-red-700 text-sm">
+          {errorMessage}
+        </div>
+      )}
 
-        <div className="admin-techs-grid">
-          {technicians.map((tech) => (
-            <div key={tech.id} className="admin-tech-card">
-              <div className="admin-tech-card-top">
-                <div>
-                  <h3>{tech.name}</h3>
-                  <p>{tech.role}</p>
-                </div>
-                <span className={`tech-status ${tech.status.toLowerCase()}`}>
-                  {tech.status}
-                </span>
+      {!loading && !errorMessage && technicians.length === 0 && (
+        <div className="p-8 text-center text-[var(--color-text-muted)]">
+          No technicians found.
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {technicians.map((tech) => (
+          <div key={tech.id} className="bg-white border border-[var(--color-border)] rounded-[12px] p-5 hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1">
+                <h3 className="font-semibold text-[var(--color-text)] mb-1">{tech.displayName || tech.name}</h3>
+                <p className="text-sm text-[var(--color-text-muted)]">{tech.name}</p>
               </div>
+              <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                tech.status === 'Available' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+              }`}>
+                {tech.status}
+              </span>
+            </div>
 
-              <div className="admin-tech-info">
-                <div className="tech-info-box">
-                  <span>Active Tickets</span>
-                  <strong>{tech.activeTickets}</strong>
-                </div>
-              </div>
-
-              <div className="admin-tech-actions">
-                {id ? (
-                  <button
-                    className="admin-tech-select-btn"
-                    onClick={() => handleAssign(tech.name)}
-                    disabled={assigningTech === tech.name}
-                  >
-                    {assigningTech === tech.name ? 'Assigning...' : 'Select'}
-                  </button>
-                ) : (
-                  <button className="admin-tech-view-btn" type="button">
-                    View Details
-                  </button>
-                )}
+            <div className="bg-[var(--color-bg)] rounded-[8px] p-3 mb-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-[var(--color-text-muted)]">Active Tickets</span>
+                <strong className="text-lg font-bold text-[var(--color-text)]">{tech.activeTickets}</strong>
               </div>
             </div>
-          ))}
-        </div>
+
+            <button 
+              className="w-full px-4 py-2 bg-[var(--color-primary)] text-white text-sm font-semibold rounded-[8px] hover:bg-[var(--color-primary-hover)] transition-colors"
+              type="button"
+            >
+              View Details
+            </button>
+          </div>
+        ))}
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
 

@@ -14,16 +14,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.smart_campus_operations.model.Ticket;
+import com.example.smart_campus_operations.service.TicketAccountMigrationService;
 import com.example.smart_campus_operations.service.TicketService;
-
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/tickets")
-@RequiredArgsConstructor
 public class TicketController {
 
     private final TicketService ticketService;
+    private final TicketAccountMigrationService ticketAccountMigrationService;
+
+    public TicketController(TicketService ticketService, TicketAccountMigrationService ticketAccountMigrationService) {
+        this.ticketService = ticketService;
+        this.ticketAccountMigrationService = ticketAccountMigrationService;
+    }
 
     // CREATE ticket
     @PostMapping
@@ -100,5 +104,20 @@ public class TicketController {
     public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
         ticketService.deleteTicket(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * One-time maintenance endpoint to replace placeholder account emails (e.g. user@example.com)
+     * that were saved into existing ticket/comment records during early development.
+     *
+     * Example body:
+     * {
+     *   "user@example.com": "real.user@domain.com",
+     *   "admin@example.com": "real.admin@domain.com"
+     * }
+     */
+    @PostMapping("/admin/migrate-accounts")
+    public ResponseEntity<Map<String, Object>> migratePlaceholderAccounts(@RequestBody Map<String, String> replacements) {
+        return ResponseEntity.ok(ticketAccountMigrationService.replaceEmails(replacements));
     }
 }

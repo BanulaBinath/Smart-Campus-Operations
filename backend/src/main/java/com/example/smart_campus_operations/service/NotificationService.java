@@ -41,6 +41,24 @@ public class NotificationService {
     }
 
     @Transactional
+    public void sendNotificationByEmail(String recipientEmail, NotificationType type, String message, Long referenceId, String referenceType) {
+        AppUser recipient = userRepository.findByEmail(recipientEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Recipient not found with email: " + recipientEmail));
+
+        UUID referenceUuid = referenceId != null ? UUID.nameUUIDFromBytes(referenceId.toString().getBytes()) : null;
+
+        Notification notification = Notification.builder()
+                .recipient(recipient)
+                .type(type)
+                .message(message)
+                .referenceId(referenceUuid)
+                .referenceType(referenceType)
+                .build();
+
+        notificationRepository.save(notification);
+    }
+
+    @Transactional
     public void sendNotificationToRole(Role role, NotificationType type, String message, UUID referenceId, String referenceType) {
         List<AppUser> users = userRepository.findAllByRole(role);
         for (AppUser recipient : users) {

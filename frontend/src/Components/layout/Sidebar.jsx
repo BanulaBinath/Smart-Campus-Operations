@@ -16,24 +16,32 @@ import {
 const Sidebar = () => {
   const { user, logout } = useAuth();
 
-  const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  ];
+  const navItems = [];
 
-  if (user?.role === 'ADMIN' || user?.role === 'TECHNICIAN') {
-    navItems.push({ name: 'Facilities', path: '/facilities', icon: Building2 });
-  } else if (user?.role === 'STUDENT' || user?.role === 'USER' || user?.role === 'LECTURER') {
-    navItems.push({ name: 'Facilities', path: '/student/facilities', icon: Building2 });
-  }
+  if (user?.role === 'TECHNICIAN') {
+    navItems.push(
+      { name: 'Dashboard', path: '/technician/dashboard', icon: LayoutDashboard },
+      { name: 'Facilities', path: '/facilities', icon: Building2 },
+      { name: 'Notifications', path: '/notifications', icon: Bell }
+    );
+  } else {
+    navItems.push({ name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard });
 
-  navItems.push(
-    { name: 'Bookings', path: '/bookings', icon: CalendarCheck }, // Module B stub
-    { name: 'Incidents', path: '/incidents', icon: AlertTriangle }, // Module C stub
-    { name: 'Notifications', path: '/notifications', icon: Bell }
-  );
+    if (user?.role === 'ADMIN') {
+      navItems.push({ name: 'Facilities', path: '/facilities', icon: Building2 });
+    } else if (user?.role === 'STUDENT' || user?.role === 'USER' || user?.role === 'LECTURER') {
+      navItems.push({ name: 'Facilities', path: '/student/facilities', icon: Building2 });
+    }
 
-  if (user?.role === 'ADMIN') {
-    navItems.push({ name: 'Users', path: '/admin/users', icon: Users });
+    navItems.push(
+      { name: 'Bookings', path: '/bookings', icon: CalendarCheck }, // Module B stub
+      { name: 'Incidents', path: '/incidents', icon: AlertTriangle }, // Module C stub
+      { name: 'Notifications', path: '/notifications', icon: Bell }
+    );
+
+    if (user?.role === 'ADMIN') {
+      navItems.push({ name: 'Users', path: '/admin/users', icon: Users });
+    }
   }
 
   return (

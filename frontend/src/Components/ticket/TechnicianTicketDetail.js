@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import DashboardLayout from './DashboardLayout';
+import TopBar from '../layout/TopBar';
+import Sidebar from '../layout/Sidebar';
 import './TechnicianTicketDetail.css';
 
 const API_BASE_URL = 'http://localhost:8080/api/tickets';
@@ -116,108 +117,129 @@ function TechnicianTicketDetail() {
 
   if (loading) {
     return (
-      <DashboardLayout role="TECHNICIAN">
-        <section className="technician-detail-page">
-          <p>Loading ticket details...</p>
-        </section>
-      </DashboardLayout>
+      <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+        <Sidebar />
+        <div className="flex flex-1 flex-col md:ml-[240px]">
+          <TopBar title="Ticket Details" />
+          <main className="flex-1 overflow-y-auto p-6">
+            <section className="technician-detail-page">
+              <p>Loading ticket details...</p>
+            </section>
+          </main>
+        </div>
+      </div>
     );
   }
 
   if (!ticket) {
     return (
-      <DashboardLayout role="TECHNICIAN">
-        <section className="technician-detail-page">
-          <p>Ticket not found.</p>
-        </section>
-      </DashboardLayout>
+      <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+        <Sidebar />
+        <div className="flex flex-1 flex-col md:ml-[240px]">
+          <TopBar title="Ticket Details" />
+          <main className="flex-1 overflow-y-auto p-6">
+            <section className="technician-detail-page">
+              <p>Ticket not found.</p>
+            </section>
+          </main>
+        </div>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout role="TECHNICIAN">
-      <section className="technician-detail-page">
-        <div className="technician-detail-top">
-          <Link to="/tickets/technician" className="back-link">
-            ← Back
-          </Link>
-        </div>
+    <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <Sidebar />
+      <div className="flex flex-1 flex-col md:ml-[240px]">
+        <TopBar title="Ticket Details" />
 
-        <div className="technician-detail-card">
-          <div className="technician-detail-header">
-            <div>
-              <h1>TICKET {ticket.id} DETAIL</h1>
-              <p>
-                {ticket.category} — {ticket.location}
-              </p>
-            </div>
+        <main className="flex-1 overflow-y-auto p-6 flex flex-col items-center">
+          <div className="w-full max-w-5xl">
+            <section className="technician-detail-page">
+              <div className="technician-detail-top">
+                <Link to="/technician/dashboard" className="back-link">
+                  ← Back
+                </Link>
+              </div>
 
-            <div className="status-select-group">
-              <label>Status:</label>
-              <select
-                value={status}
-                onChange={(e) => {
-                  const newStatus = e.target.value;
-                  setStatus(newStatus);
-                  handleStatusChange(newStatus);
-                }}
-              >
-                <option value="OPEN">OPEN</option>
-                <option value="IN_PROGRESS">IN_PROGRESS</option>
-                <option value="RESOLVED">RESOLVED</option>
-                <option value="CLOSED">CLOSED</option>
-              </select>
-              <span className="status-help">can change status from here</span>
-            </div>
-          </div>
-
-          {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
-          {successMessage && <p className="form-message success-message">{successMessage}</p>}
-
-          <div className="evidence-section">
-            <h3>Evidence Images</h3>
-            <div className="evidence-grid">
-              {attachments.length > 0 ? (
-                attachments.map((attachment) => (
-                  <div className="evidence-box" key={attachment.id}>
-                    <p>{attachment.fileName}</p>
+              <div className="technician-detail-card">
+                <div className="technician-detail-header">
+                  <div>
+                    <h1>TICKET {ticket.id} DETAIL</h1>
+                    <p>
+                      {ticket.category} — {ticket.location}
+                    </p>
                   </div>
-                ))
-              ) : (
-                <div className="evidence-box">No images uploaded</div>
-              )}
-            </div>
+
+                  <div className="status-select-group">
+                    <label>Status:</label>
+                    <select
+                      value={status}
+                      onChange={(e) => {
+                        const newStatus = e.target.value;
+                        setStatus(newStatus);
+                        handleStatusChange(newStatus);
+                      }}
+                    >
+                      <option value="OPEN">OPEN</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="RESOLVED">RESOLVED</option>
+                      <option value="CLOSED">CLOSED</option>
+                    </select>
+                    <span className="status-help">can change status from here</span>
+                  </div>
+                </div>
+
+                {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
+                {successMessage && <p className="form-message success-message">{successMessage}</p>}
+
+                <div className="evidence-section">
+                  <h3>Evidence Images</h3>
+                  <div className="evidence-grid">
+                    {attachments.length > 0 ? (
+                      attachments.map((attachment) => (
+                        <div className="evidence-box" key={attachment.id}>
+                          <p>{attachment.fileName}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="evidence-box">No images uploaded</div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="tech-chat-section">
+                  <h3>Ticket Details</h3>
+                  <div className="tech-chat-box">
+                    <div className="tech-chat-message user-msg">
+                      <strong>Description:</strong> {ticket.description}
+                    </div>
+                    <div className="tech-chat-message tech-msg">
+                      <strong>Priority:</strong> {ticket.priority}
+                    </div>
+                    <div className="tech-chat-message tech-msg">
+                      <strong>Contact:</strong> {ticket.contactDetails}
+                    </div>
+                  </div>
+
+                  <textarea
+                    className="resolution-note"
+                    rows="4"
+                    value={resolutionNote}
+                    onChange={(e) => setResolutionNote(e.target.value)}
+                    placeholder="Add resolution note..."
+                  ></textarea>
+
+                  <button type="button" className="save-note-btn" onClick={handleSaveResolution}>
+                    Save Note
+                  </button>
+                </div>
+              </div>
+            </section>
           </div>
-
-          <div className="tech-chat-section">
-            <h3>Ticket Details</h3>
-            <div className="tech-chat-box">
-              <div className="tech-chat-message user-msg">
-                <strong>Description:</strong> {ticket.description}
-              </div>
-              <div className="tech-chat-message tech-msg">
-                <strong>Priority:</strong> {ticket.priority}
-              </div>
-              <div className="tech-chat-message tech-msg">
-                <strong>Contact:</strong> {ticket.contactDetails}
-              </div>
-            </div>
-
-            <textarea
-              className="resolution-note"
-              rows="4"
-              value={resolutionNote}
-              onChange={(e) => setResolutionNote(e.target.value)}
-              placeholder="Add resolution note..."
-            ></textarea>
-
-            <button type="button" className="save-note-btn" onClick={handleSaveResolution}>
-              Save Note
-            </button>
-          </div>
-        </div>
-      </section>
-    </DashboardLayout>
+        </main>
+      </div>
+    </div>
   );
 }
 

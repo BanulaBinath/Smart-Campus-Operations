@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import TopBar from '../components/layout/TopBar';
-import Sidebar from '../components/layout/Sidebar';
+import TopBar from '../Components/layout/TopBar';
+import Sidebar from '../Components/layout/Sidebar';
 import { useAuth } from '../context/AuthContext';
 import { notificationApi } from '../api/notificationApi';
-import NotificationItem from '../components/notifications/NotificationItem';
+import NotificationItem from '../Components/notifications/NotificationItem';
 import { 
   CalendarCheck, 
   AlertTriangle, 

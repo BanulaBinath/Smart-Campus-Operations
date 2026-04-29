@@ -2,8 +2,10 @@ package com.example.smart_campus_operations.service;
 
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import com.example.smart_campus_operations.event.NewCommentEvent;
 import com.example.smart_campus_operations.model.Comment;
 import com.example.smart_campus_operations.model.Ticket;
 import com.example.smart_campus_operations.repo.CommentRepository;
@@ -16,11 +18,24 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final TicketService ticketService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Comment addComment(Long ticketId, Comment comment) {
         Ticket ticket = ticketService.getTicketById(ticketId);
         comment.setTicket(ticket);
-        return commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+        
+        // Only send notification if commenter is not the ticket owner
+        if (!savedComment.getCreatedBy().equals(ticket.getCreatedBy())) {
+            eventPublisher.publishEvent(new NewCommentEvent(
+                savedComment.getId(),
+                ticket.getId(),
+                ticket.getCreatedBy(),
+                savedComment.getCreatedBy()
+            ));
+        }
+        
+        return savedComment;
     }
 
     public List<Comment> getCommentsByTicket(Long ticketId) {

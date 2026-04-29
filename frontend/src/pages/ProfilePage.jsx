@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { useAuth } from '../context/AuthContext';
-import TopBar from '../components/layout/TopBar';
-import Sidebar from '../components/layout/Sidebar';
-import RoleBadge from '../components/admin/RoleBadge';
+import TopBar from '../Components/layout/TopBar';
+import Sidebar from '../Components/layout/Sidebar';
+import RoleBadge from '../Components/admin/RoleBadge';
 import { LogOut, Save, Edit2, Trash2, X } from 'lucide-react';
 import { userApi } from '../api/userApi';
 import { useToast } from '../hooks/useToast';
-import Toast from '../components/ui/Toast';
+import Toast from '../Components/ui/Toast';
 
 const ProfilePage = () => {
   const { user, logout, fetchCurrentUser } = useAuth();

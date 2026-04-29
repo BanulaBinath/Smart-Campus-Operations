@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCheck, Send } from 'lucide-react';
-import TopBar from '../components/layout/TopBar';
-import Sidebar from '../components/layout/Sidebar';
-import NotificationItem from '../components/notifications/NotificationItem';
+import TopBar from '../Components/layout/TopBar';
+import Sidebar from '../Components/layout/Sidebar';
+import NotificationItem from '../Components/notifications/NotificationItem';
 import { notificationApi } from '../api/notificationApi';
 import { useAuth } from '../context/AuthContext';
 

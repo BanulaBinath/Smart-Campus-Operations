@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import TopBar from '../../components/layout/TopBar';
-import Sidebar from '../../components/layout/Sidebar';
-import Facility from '../../components/admin/Facility';
-import AddFacility from '../../components/admin/addFacility';
+import TopBar from '../../Components/layout/TopBar';
+import Sidebar from '../../Components/layout/Sidebar';
+import Facility from '../../Components/admin/Facility';
+import AddFacility from '../../Components/admin/addFacility';
 import { useAuth } from '../../context/AuthContext';
 
 const FacilitiesPage = () => {

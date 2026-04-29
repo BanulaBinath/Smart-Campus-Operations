@@ -1,7 +1,7 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Navigate, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 // Pages
 
@@ -13,13 +13,23 @@ import NotFoundPage from './pages/NotFoundPage';
 import FacilitiesPage from './pages/admin/FacilitiesPage';
 import StudentFacilitiesPage from './pages/student/StudentFacilitiesPage';
 
+// Ticket System Components
+import TicketDashboardRouter from './Components/ticket/TicketDashboardRouter';
+import CreateTicket from './Components/ticket/CreateTicket';
+import TicketChat from './Components/ticket/TicketChat';
+import TechnicianDashboard from './Components/ticket/TechnicianDashboard';
+import TechnicianTicketDetail from './Components/ticket/TechnicianTicketDetail';
+import AdminDashboard from './Components/ticket/admin/AdminDashboard';
+import AdminTicketDetails from './Components/ticket/admin/AdminTicketDetails';
+import AdminAssignTechnician from './Components/ticket/admin/AdminAssignTechnician';
+
 // Original Components
-import Home from './components/home/home';
-import SignUp from './components/home/signUp';
-import Login from './components/home/login';
+import Home from './Components/home/home';
+import SignUp from './Components/home/signUp';
+import Login from './Components/home/login';
 
 // Role Redirect logic
-import RoleRedirect from './components/RoleRedirect';
+import RoleRedirect from './Components/RoleRedirect';
 
 function App() {
   return (
@@ -38,19 +48,33 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/student/dashboard" element={<DashboardPage />} />
           <Route path="/lecturer/dashboard" element={<DashboardPage />} />
-          <Route path="/technician/dashboard" element={<DashboardPage />} />
 
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
 
+          {/* Ticket/Incident Routes */}
+          <Route path="/incidents" element={<TicketDashboardRouter />} />
+          <Route path="/tickets" element={<TicketDashboardRouter />} />
+          <Route path="/tickets/create" element={<CreateTicket />} />
+          <Route path="/tickets/chat/:ticketId" element={<TicketChat />} />
+
           {/* Stubs for other modules */}
           <Route path="/bookings" element={<DashboardPage />} />
-          <Route path="/incidents" element={<DashboardPage />} />
         </Route>
 
         {/* Admin and Technician Routes */}
         <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'TECHNICIAN']} />}>
           <Route path="/facilities" element={<FacilitiesPage />} />
+        </Route>
+
+        {/* Technician Only Routes */}
+        <Route element={<ProtectedRoute allowedRoles={['TECHNICIAN']} />}>
+          <Route path="/technician/dashboard" element={<TechnicianDashboard />} />
+          <Route path="/technician/tickets/:ticketId" element={<TechnicianTicketDetail />} />
+
+          {/* Back-compat routes used by older technician ticket pages */}
+          <Route path="/tickets/technician" element={<Navigate to="/technician/dashboard" replace />} />
+          <Route path="/tickets/technician/:ticketId" element={<TechnicianTicketDetail />} />
         </Route>
 
         {/* Student Routes */}
@@ -61,6 +85,9 @@ function App() {
         {/* Admin Only Routes */}
         <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
           <Route path="/admin/users" element={<UserManagementPage />} />
+          <Route path="/admin/tickets" element={<AdminDashboard initialTab="tickets" />} />
+          <Route path="/admin/tickets/:id" element={<AdminTicketDetails />} />
+          <Route path="/admin/tickets/:id/assign" element={<AdminAssignTechnician />} />
         </Route>
 
         {/* Fallback */}

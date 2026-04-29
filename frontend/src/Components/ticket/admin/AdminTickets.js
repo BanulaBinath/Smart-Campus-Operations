@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import DashboardLayout from '../DashboardLayout';
 import './AdminTickets.css';
 
 const API_BASE_URL = 'http://localhost:8080/api/tickets';
@@ -42,87 +41,101 @@ function AdminTickets() {
   }, [statusFilter, tickets]);
 
   return (
-    <DashboardLayout role="ADMIN">
-      <div className="admin-tickets-page">
-        <div className="admin-tickets-header">
-          <div>
-            <h2>All Tickets</h2>
-            <p>Review, filter, and open any ticket from the system.</p>
-          </div>
-
-          <div className="admin-ticket-filter">
-            <label htmlFor="statusFilter">Filter by Status</label>
-            <select
-              id="statusFilter"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="ALL">All</option>
-              <option value="OPEN">Open</option>
-              <option value="IN_PROGRESS">In Progress</option>
-              <option value="RESOLVED">Resolved</option>
-              <option value="REJECTED">Rejected</option>
-              <option value="CLOSED">Closed</option>
-            </select>
-          </div>
+    <div className="p-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <label htmlFor="statusFilter" className="text-sm font-semibold text-[var(--color-text)]">
+            Filter by Status:
+          </label>
+          <select
+            id="statusFilter"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-[var(--color-border)] rounded-[8px] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:border-[var(--color-primary)] cursor-pointer"
+          >
+            <option value="ALL">All</option>
+            <option value="OPEN">Open</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="RESOLVED">Resolved</option>
+            <option value="REJECTED">Rejected</option>
+            <option value="CLOSED">Closed</option>
+          </select>
         </div>
-
-        {loading && <p>Loading tickets...</p>}
-        {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
-
-        {!loading && !errorMessage && (
-          <div className="admin-tickets-table-wrapper">
-            <table className="admin-tickets-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Title</th>
-                  <th>Location</th>
-                  <th>Priority</th>
-                  <th>Status</th>
-                  <th>Assigned To</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTickets.map((ticket) => (
-                  <tr key={ticket.id}>
-                    <td>#{ticket.id}</td>
-                    <td>{ticket.title || ticket.category || 'Maintenance Ticket'}</td>
-                    <td>{ticket.location}</td>
-                    <td>
-                      <span className={`priority-badge ${ticket.priority.toLowerCase()}`}>
-                        {ticket.priority}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`status-badge ${ticket.status.toLowerCase()}`}>
-                        {ticket.status.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td>{ticket.assignedTo || 'Not Assigned'}</td>
-                    <td>
-                      <Link
-                        to={`/admin/tickets/${ticket.id}`}
-                        className="admin-open-btn"
-                      >
-                        Open
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {filteredTickets.length === 0 && (
-              <div className="admin-no-tickets">
-                <p>No tickets found for this filter.</p>
-              </div>
-            )}
-          </div>
-        )}
       </div>
-    </DashboardLayout>
+
+      {loading && (
+        <div className="flex justify-center p-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-primary)] border-t-transparent"></div>
+        </div>
+      )}
+      
+      {errorMessage && (
+        <div className="p-4 mb-6 bg-red-50 border border-red-200 rounded-[8px] text-red-700 text-sm">
+          {errorMessage}
+        </div>
+      )}
+
+      {!loading && !errorMessage && (
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-[var(--color-bg)] border-b border-[var(--color-border)]">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">ID</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Title</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Location</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Priority</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Assigned To</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border)]">
+              {filteredTickets.map((ticket) => (
+                <tr key={ticket.id} className="hover:bg-[var(--color-bg)] transition-colors">
+                  <td className="px-4 py-3 text-sm font-medium text-[var(--color-text)]">#{ticket.id}</td>
+                  <td className="px-4 py-3 text-sm text-[var(--color-text)]">{ticket.title || ticket.category || 'Maintenance Ticket'}</td>
+                  <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{ticket.location}</td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      ticket.priority === 'HIGH' ? 'bg-red-100 text-red-700' :
+                      ticket.priority === 'MEDIUM' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-blue-100 text-blue-700'
+                    }`}>
+                      {ticket.priority}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      ticket.status === 'OPEN' ? 'bg-red-100 text-red-700' :
+                      ticket.status === 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-700' :
+                      ticket.status === 'RESOLVED' ? 'bg-green-100 text-green-700' :
+                      'bg-gray-100 text-gray-700'
+                    }`}>
+                      {ticket.status.replace('_', ' ')}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{ticket.assignedTo || 'Not Assigned'}</td>
+                  <td className="px-4 py-3">
+                    <Link
+                      to={`/admin/tickets/${ticket.id}`}
+                      className="text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors"
+                    >
+                      Open
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {filteredTickets.length === 0 && (
+            <div className="p-8 text-center text-[var(--color-text-muted)]">
+              No tickets found for this filter.
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 

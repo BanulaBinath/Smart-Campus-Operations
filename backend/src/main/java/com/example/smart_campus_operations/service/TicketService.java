@@ -3,8 +3,10 @@ package com.example.smart_campus_operations.service;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import com.example.smart_campus_operations.event.TicketCreatedEvent;
 import com.example.smart_campus_operations.exception.BadRequestException;
 import com.example.smart_campus_operations.exception.ResourceNotFoundException;
 import com.example.smart_campus_operations.model.Ticket;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     private static final Set<String> ALLOWED_STATUSES = Set.of(
             "OPEN",
@@ -26,7 +29,16 @@ public class TicketService {
     );
 
     public Ticket createTicket(Ticket ticket) {
-        return ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        
+        // Publish ticket created event
+        eventPublisher.publishEvent(new TicketCreatedEvent(
+            savedTicket.getId(),
+            savedTicket.getCreatedBy(),
+            savedTicket.getTitle()
+        ));
+        
+        return savedTicket;
     }
 
     public List<Ticket> getAllTickets() {

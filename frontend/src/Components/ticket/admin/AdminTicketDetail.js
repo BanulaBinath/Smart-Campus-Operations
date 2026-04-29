@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import DashboardLayout from '../DashboardLayout';
+import TopBar from '../../layout/TopBar';
+import Sidebar from '../../layout/Sidebar';
+import { useAuth } from '../../../context/AuthContext';
 import './AdminTicketDetail.css';
 
 const API_BASE_URL = 'http://localhost:8080/api/tickets';
-const ADMIN_USER = 'admin@example.com';
 
 function AdminTicketDetail() {
   const { id } = useParams();
+  const { user } = useAuth();
+  const currentUserEmail = user?.email || '';
+  const currentUserRole = user?.role || 'ADMIN';
 
   const [ticket, setTicket] = useState(null);
   const [status, setStatus] = useState('OPEN');
@@ -121,6 +125,11 @@ function AdminTicketDetail() {
   const handleSendComment = async () => {
     if (!newComment.trim()) return;
 
+    if (!currentUserEmail) {
+      setErrorMessage('Could not determine your account email. Please re-login.');
+      return;
+    }
+
     try {
       setErrorMessage('');
       setSuccessMessage('');
@@ -132,8 +141,8 @@ function AdminTicketDetail() {
         },
         body: JSON.stringify({
           message: newComment,
-          createdBy: ADMIN_USER,
-          createdByRole: 'ADMIN'
+          createdBy: currentUserEmail,
+          createdByRole: currentUserRole
         })
       });
 
@@ -153,148 +162,173 @@ function AdminTicketDetail() {
 
   if (loading) {
     return (
-      <DashboardLayout role="ADMIN">
-        <div className="admin-ticket-detail-page">
-          <p>Loading ticket details...</p>
+      <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+        <Sidebar />
+        <div className="flex flex-1 flex-col md:ml-[240px]">
+          <TopBar title="Support Tickets" />
+          <main className="flex-1 overflow-y-auto p-6 flex flex-col items-center">
+            <div className="w-full max-w-5xl">
+              <div className="admin-ticket-detail-page">
+                <p>Loading ticket details...</p>
+              </div>
+            </div>
+          </main>
         </div>
-      </DashboardLayout>
+      </div>
     );
   }
 
   if (!ticket) {
     return (
-      <DashboardLayout role="ADMIN">
-        <div className="admin-ticket-detail-page">
-          <p>Ticket not found.</p>
+      <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+        <Sidebar />
+        <div className="flex flex-1 flex-col md:ml-[240px]">
+          <TopBar title="Support Tickets" />
+          <main className="flex-1 overflow-y-auto p-6 flex flex-col items-center">
+            <div className="w-full max-w-5xl">
+              <div className="admin-ticket-detail-page">
+                <p>Ticket not found.</p>
+              </div>
+            </div>
+          </main>
         </div>
-      </DashboardLayout>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout role="ADMIN">
-      <div className="admin-ticket-detail-page">
-        <div className="admin-ticket-topbar">
-          <Link to="/admin/tickets" className="admin-back-link">
-            ← Back to All Tickets
-          </Link>
-        </div>
+    <div className="flex h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <Sidebar />
+      <div className="flex flex-1 flex-col md:ml-[240px]">
+        <TopBar title="Support Tickets" />
 
-        <div className="admin-ticket-detail-card">
-          <div className="admin-ticket-detail-header">
-            <div>
-              <h2>Ticket #{ticket.id}</h2>
-              <p>{ticket.title || ticket.category || 'Maintenance Ticket'}</p>
-            </div>
+        <main className="flex-1 overflow-y-auto p-6 flex flex-col items-center">
+          <div className="w-full max-w-5xl">
+            <div className="admin-ticket-detail-page">
+              <div className="admin-ticket-topbar">
+                <Link to="/admin/tickets" className="admin-back-link">
+                  ← Back to All Tickets
+                </Link>
+              </div>
 
-            <span className={`detail-status-badge ${status.toLowerCase()}`}>
-              {status.replace('_', ' ')}
-            </span>
-          </div>
+              <div className="admin-ticket-detail-card">
+                <div className="admin-ticket-detail-header">
+                  <div>
+                    <h2>Ticket #{ticket.id}</h2>
+                    <p>{ticket.title || ticket.category || 'Maintenance Ticket'}</p>
+                  </div>
 
-          {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
-          {successMessage && <p className="form-message success-message">{successMessage}</p>}
-
-          <div className="admin-ticket-meta-grid">
-            <div className="meta-box">
-              <span>Category</span>
-              <strong>{ticket.category || 'N/A'}</strong>
-            </div>
-            <div className="meta-box">
-              <span>Location</span>
-              <strong>{ticket.location || 'N/A'}</strong>
-            </div>
-            <div className="meta-box">
-              <span>Priority</span>
-              <strong>{ticket.priority || 'N/A'}</strong>
-            </div>
-            <div className="meta-box">
-              <span>Submitted By</span>
-              <strong>{ticket.createdBy || 'N/A'}</strong>
-            </div>
-            <div className="meta-box">
-              <span>Assigned Technician</span>
-              <strong>{ticket.assignedTo || 'Not Assigned'}</strong>
-            </div>
-          </div>
-
-          <div className="admin-ticket-description">
-            <h3>Description</h3>
-            <p>{ticket.description || 'No description available.'}</p>
-          </div>
-
-          {status === 'REJECTED' && (
-            <div className="admin-ticket-description">
-              <h3>Rejection Reason</h3>
-              <p>{ticket.rejectionReason || rejectionReason}</p>
-            </div>
-          )}
-
-          <div className="admin-ticket-actions">
-            <Link to={`/admin/tickets/${ticket.id}/assign`} className="action-btn assign-btn">
-              Assign Technician
-            </Link>
-
-            <button
-              className="action-btn progress-btn"
-              onClick={() => handleStatusUpdate('IN_PROGRESS')}
-            >
-              Mark In Progress
-            </button>
-
-            <button
-              className="action-btn close-btn"
-              onClick={() => handleStatusUpdate('RESOLVED')}
-            >
-              Close
-            </button>
-
-            <button
-              className="action-btn reject-btn"
-              onClick={handleReject}
-            >
-              Reject
-            </button>
-          </div>
-
-          <div className="admin-comment-box" style={{ marginTop: '16px' }}>
-            <input
-              type="text"
-              placeholder="Enter rejection reason before rejecting..."
-              value={rejectionReason}
-              onChange={(e) => setRejectionReason(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="admin-comments-card">
-          <h3>Comments</h3>
-
-          <div className="admin-comments-list">
-            {comments.length > 0 ? (
-              comments.map((comment) => (
-                <div key={comment.id} className="admin-comment-item">
-                  <strong>{comment.createdBy || 'User'}</strong>
-                  <p>{comment.message}</p>
+                  <span className={`detail-status-badge ${status.toLowerCase()}`}>
+                    {status.replace('_', ' ')}
+                  </span>
                 </div>
-              ))
-            ) : (
-              <p>No comments yet.</p>
-            )}
-          </div>
 
-          <div className="admin-comment-box">
-            <input
-              type="text"
-              placeholder="Type a comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-            <button onClick={handleSendComment}>Send</button>
+                {errorMessage && <p className="form-message error-message">{errorMessage}</p>}
+                {successMessage && <p className="form-message success-message">{successMessage}</p>}
+
+                <div className="admin-ticket-meta-grid">
+                  <div className="meta-box">
+                    <span>Category</span>
+                    <strong>{ticket.category || 'N/A'}</strong>
+                  </div>
+                  <div className="meta-box">
+                    <span>Location</span>
+                    <strong>{ticket.location || 'N/A'}</strong>
+                  </div>
+                  <div className="meta-box">
+                    <span>Priority</span>
+                    <strong>{ticket.priority || 'N/A'}</strong>
+                  </div>
+                  <div className="meta-box">
+                    <span>Submitted By</span>
+                    <strong>{ticket.createdBy || 'N/A'}</strong>
+                  </div>
+                  <div className="meta-box">
+                    <span>Assigned Technician</span>
+                    <strong>{ticket.assignedTo || 'Not Assigned'}</strong>
+                  </div>
+                </div>
+
+                <div className="admin-ticket-description">
+                  <h3>Description</h3>
+                  <p>{ticket.description || 'No description available.'}</p>
+                </div>
+
+                {status === 'REJECTED' && (
+                  <div className="admin-ticket-description">
+                    <h3>Rejection Reason</h3>
+                    <p>{ticket.rejectionReason || rejectionReason}</p>
+                  </div>
+                )}
+
+                <div className="admin-ticket-actions">
+                  <Link to={`/admin/tickets/${ticket.id}/assign`} className="action-btn assign-btn">
+                    Assign Technician
+                  </Link>
+
+                  <button
+                    className="action-btn progress-btn"
+                    onClick={() => handleStatusUpdate('IN_PROGRESS')}
+                  >
+                    Mark In Progress
+                  </button>
+
+                  <button
+                    className="action-btn close-btn"
+                    onClick={() => handleStatusUpdate('RESOLVED')}
+                  >
+                    Close
+                  </button>
+
+                  <button
+                    className="action-btn reject-btn"
+                    onClick={handleReject}
+                  >
+                    Reject
+                  </button>
+                </div>
+
+                <div className="admin-comment-box" style={{ marginTop: '16px' }}>
+                  <input
+                    type="text"
+                    placeholder="Enter rejection reason before rejecting..."
+                    value={rejectionReason}
+                    onChange={(e) => setRejectionReason(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="admin-comments-card">
+                <h3>Comments</h3>
+
+                <div className="admin-comments-list">
+                  {comments.length > 0 ? (
+                    comments.map((comment) => (
+                      <div key={comment.id} className="admin-comment-item">
+                        <strong>{comment.createdBy || 'User'}</strong>
+                        <p>{comment.message}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No comments yet.</p>
+                  )}
+                </div>
+
+                <div className="admin-comment-box">
+                  <input
+                    type="text"
+                    placeholder="Type a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                  />
+                  <button onClick={handleSendComment}>Send</button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </main>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
 

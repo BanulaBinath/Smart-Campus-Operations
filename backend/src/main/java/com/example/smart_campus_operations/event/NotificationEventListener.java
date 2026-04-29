@@ -46,8 +46,17 @@ public class NotificationEventListener {
     @EventListener
     public void handleNewComment(NewCommentEvent event) {
         log.info("Handling new comment event for ticket: {}", event.ticketId());
-        String message = event.commenterName() + " commented on your ticket " + event.ticketId() + ".";
+        String message = event.commenterName() + " commented on your ticket #" + event.ticketId() + ".";
         
-        notificationService.sendNotification(event.ticketOwnerId(), NotificationType.NEW_COMMENT, message, event.ticketId(), "TICKET");
+        notificationService.sendNotificationByEmail(event.ticketOwnerId(), NotificationType.NEW_COMMENT, message, event.ticketId(), "TICKET");
+    }
+
+    @Async
+    @EventListener
+    public void handleTicketCreated(TicketCreatedEvent event) {
+        log.info("Handling ticket created event for ticket: {}", event.ticketId());
+        String message = "Your ticket #" + event.ticketId() + " has been created successfully.";
+        
+        notificationService.sendNotificationByEmail(event.userId(), NotificationType.TICKET_CREATED, message, event.ticketId(), "TICKET");
     }
 }

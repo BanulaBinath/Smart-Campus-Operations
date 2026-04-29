@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import TopBar from '../../components/layout/TopBar';
-import Sidebar from '../../components/layout/Sidebar';
+import TopBar from '../../Components/layout/TopBar';
+import Sidebar from '../../Components/layout/Sidebar';
 import { getAllFacilities } from '../../services/facilityService';
 import { useAuth } from '../../context/AuthContext';
 
